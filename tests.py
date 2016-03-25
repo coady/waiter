@@ -33,4 +33,6 @@ def test_functional():
 
 
 def test_waiting():
-    pass
+    elapsed = list(wait(0.1, timeout=1) * 2)
+    assert elapsed[0] == 0.0
+    assert 0.1 <= elapsed[1] < 0.3 <= elapsed[2] < 0.7 <= elapsed[3] < 1.0 <= elapsed[4] < 1.5

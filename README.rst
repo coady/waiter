@@ -1,13 +1,13 @@
 About waiter
 =========================
-.. .. image:: https://img.shields.io/pypi/v/waiter.svg
-..    :target: https://pypi.python.org/pypi/waiter/
-.. .. image:: https://img.shields.io/pypi/pyversions/waiter.svg
-.. .. image:: https://img.shields.io/pypi/status/waiter.svg
-.. .. image:: https://img.shields.io/travis/coady/waiter.svg
-..    :target: https://travis-ci.org/coady/waiter
-.. .. image:: https://img.shields.io/codecov/c/github/coady/waiter.svg
-..    :target: https://codecov.io/github/coady/waiter
+.. image:: https://img.shields.io/pypi/v/waiter.svg
+   :target: https://pypi.python.org/pypi/waiter/
+.. image:: https://img.shields.io/pypi/pyversions/waiter.svg
+.. image:: https://img.shields.io/pypi/status/waiter.svg
+.. image:: https://img.shields.io/travis/coady/waiter.svg
+   :target: https://travis-ci.org/coady/waiter
+.. image:: https://img.shields.io/codecov/c/github/coady/waiter.svg
+   :target: https://codecov.io/github/coady/waiter
 
 Does python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.
@@ -67,6 +67,7 @@ Yes, functional versions are provided too, because they're trivial to implement.
     wait.poll(predicate, func, *args, **kwargs)
 
 But in the real world:
+
  * the function might not exist or be succinctly written as a lambda
  * the predicate might not exist or be succinctly written as a lambda
  * logging may be required

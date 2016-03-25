@@ -1,8 +1,9 @@
 from setuptools import setup
+import waiter
 
 setup(
     name='waiter',
-    version='0.0',
+    version=waiter.__version__,
     description='Delayed iteration for polling and retries.',
     long_description=open('README.rst').read(),
     author='Aric Coady',
@@ -13,7 +14,7 @@ setup(
     tests_require=['pytest-cov'],
     keywords=['wait', 'retry', 'poll', 'delay', 'sleep', 'backoff'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',

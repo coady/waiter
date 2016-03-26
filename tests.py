@@ -29,10 +29,10 @@ def test_functional():
     with pytest.raises(StopIteration):
         assert w.poll(str.islower, next, iter('ABC'))
 
-    assert list(wait(1, timeout=0)) == [0.0]
+    assert list(wait(1, timeout=-1)) == [0.0]
 
 
 def test_waiting():
     elapsed = list(wait(0.1, timeout=1) * 2)
     assert elapsed[0] == 0.0
-    assert 0.1 <= elapsed[1] < 0.3 <= elapsed[2] < 0.7 <= elapsed[3] < 1.0 <= elapsed[4] < 1.5
+    assert 0.1 <= elapsed[1] < 0.3 <= elapsed[2] < 0.7 <= elapsed[3] < 1.0 <= elapsed[4] < 1.1

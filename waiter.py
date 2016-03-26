@@ -1,4 +1,5 @@
 import collections
+import contextlib
 import itertools
 import random
 import time
@@ -8,6 +9,16 @@ except ImportError:
     pass
 
 __version__ = '0.1'
+
+
+@contextlib.contextmanager
+def suppress(*exceptions):
+    """Backport of contextlib.suppress, which also records exception."""
+    excs = []
+    try:
+        yield excs
+    except exceptions as exc:
+        excs.append(exc)
 
 
 class wait(object):
@@ -57,13 +68,10 @@ class wait(object):
 
     def retry(self, exception, func, *args, **kwargs):
         """Repeat function call until no exception is raised."""
-        exc = None
         for _ in self:
-            try:
+            with suppress(exception) as excs:
                 return func(*args, **kwargs)
-            except exception as e:
-                exc = e  # py3 requires a local variable
-        raise exc
+        raise excs[0]
 
     def poll(self, predicate, func, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""

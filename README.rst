@@ -25,6 +25,7 @@ Supply a number of seconds to repeat endlessly, or any iterable of seconds.
 .. code-block:: python
 
    from waiter import wait
+
    wait(1)              # 1, 1, 1, 1, ...
    wait([1] * 3)        # 1, 1, 1
    wait([0.5, 0.5, 60]) # circuit breaker
@@ -45,12 +46,12 @@ Timeouts also supported of course.
 
 .. code-block:: python
 
-   for elapsed in wait(delays):  # first iteration is immediate
-      try:                       # then each subsequent iteration sleeps as necessary
+   from waiter import wait, suppress
+
+   for elapsed in wait(delays):     # first iteration is immediate
+      with suppress(exception):     # then each subsequent iteration sleeps as necessary
          ...
          break
-      except ...:
-         continue
 
    for _ in wait(delays, timeout=n) # standard convention for ignoring a loop variable
       ...                           # won't sleep past the timeout

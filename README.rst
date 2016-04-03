@@ -95,3 +95,11 @@ Tests
 100% branch coverage. ::
 
    $ py.test [--cov]
+
+Changes
+=========================
+0.2
+
+* ``suppress`` context manager for exception handling
+* ``repeat`` method for decoupled iteration
+* ``first`` function for convenient filtering

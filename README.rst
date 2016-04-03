@@ -41,51 +41,54 @@ but constructors for common algorithms are also provided.
    w <= 5            # set maximum delay   1, 2, 4, 5, 5, 5, ...
    w.random(-1, 1)   # add random jitter
 
-Then simply use the wait object like any iterator, yielding the amount of elapsed time.
+Then simply use the ``wait`` object like any iterable, yielding the amount of elapsed time.
 Timeouts also supported of course.
 
 .. code-block:: python
 
-   from waiter import wait, suppress
+   from waiter import wait, suppress, first
 
-   for elapsed in wait(delays):     # first iteration is immediate
-      with suppress(exception):     # then each subsequent iteration sleeps as necessary
+   for elapsed in wait(delays):           # first iteration is immediate
+      with suppress(exception):           # then each subsequent iteration sleeps as necessary
          ...
          break
 
-   for _ in wait(delays, timeout=n) # standard convention for ignoring a loop variable
-      ...                           # won't sleep past the timeout
+   for _ in wait(delays, timeout=n)       # standard convention for ignoring a loop variable
+      ...                                 # won't sleep past the timeout
       if ...:
          break
 
-   any(... for _ in wait(delays))   # perfect for tests too
+   results = (... for _ in wait(delays))  # expressions are even easier
+   first(predicate, results[, default])   # filter for first true item
+   assert any(results)                    # perfect for tests too
 
-Yes, functional versions are provided too, because they're trivial to implement.
+Yes, functional versions are provided too, because now they're trivial to implement.
 
 .. code-block:: python
 
-    wait.retry(exception, func, *args, **kwargs)
-    wait.poll(predicate, func, *args, **kwargs)
+    wait(delays).repeat(func, *args, **kwargs)
+    wait(delays).retry(exception, func, *args, **kwargs)
+    wait(delays).poll(predicate, func, *args, **kwargs)
 
 But in the real world:
 
- * the function might not exist or be succinctly written as a lambda
- * the predicate might not exist or be succinctly written as a lambda
- * logging may be required
- * there may be complex handling of different exceptions or results
+* the function may not exist or be succinctly written as a lambda
+* the predicate may not exist or be succinctly written as a lambda
+* logging may be required
+* there may be complex handling of different exceptions or results
 
 So consider the block form, just as decorators don't render ``with`` blocks superfluous.
+Also note ``wait`` objects are re-iterable if and only if their underlying delays are.
 
 Installation
 =========================
-Standard installation from pypi or local download. ::
+::
 
    $ pip install waiter
-   $ python setup.py install
 
 Dependencies
 =========================
-   * Python 2.7, 3.3+
+* Python 2.7, 3.3+
 
 Tests
 =========================

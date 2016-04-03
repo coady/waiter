@@ -21,6 +21,11 @@ def suppress(*exceptions):
         excs.append(exc)
 
 
+def first(predicate, iterable, *default):
+    """Return first item which evaluates to true, like `any` with filtering."""
+    return next(filter(predicate, iterable), *default)
+
+
 class wait(object):
     """Provide an iterator which sleeps for given delays.
 
@@ -66,6 +71,10 @@ class wait(object):
         """Add random jitter within given range."""
         return self.clone(delay + start + (stop - start) * random.random() for delay in self.delays)
 
+    def repeat(self, func, *args, **kwargs):
+        """Repeat function call."""
+        return (func(*args, **kwargs) for _ in self)
+
     def retry(self, exception, func, *args, **kwargs):
         """Repeat function call until no exception is raised."""
         for _ in self:
@@ -75,5 +84,4 @@ class wait(object):
 
     def poll(self, predicate, func, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
-        results = (func(*args, **kwargs) for _ in self)
-        return next(filter(predicate, results))
+        return first(predicate, self.repeat(func, *args, **kwargs))

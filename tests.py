@@ -1,5 +1,5 @@
 import pytest
-from waiter import wait
+from waiter import wait, first
 
 
 def test_constructors():
@@ -29,6 +29,7 @@ def test_functional():
     with pytest.raises(StopIteration):
         assert w.poll(str.islower, next, iter('ABC'))
 
+    assert first(str.islower, w.repeat(next, iter('ABC')), None) is None
     assert list(wait(1, timeout=-1)) == [0.0]
 
 

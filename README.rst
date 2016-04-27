@@ -12,7 +12,7 @@ It needs at least one that isn't coupled to decorators and functions.
 Decorators prevent the caller from customizing delay options.
 And even organizing the code around functions prevents custom handling of failures.
 
-Waiter is built around iterators instead, because the foundation of retrying / polling is a slowly executing loop.
+Waiter is built around iteration instead, because the foundation of retrying / polling is a slowly executing loop.
 The resulting interface is both easier to use and more flexible,
 decoupling the delay algorithms from the application logic.
 
@@ -61,12 +61,20 @@ Timeouts also supported of course.
    assert any(results)                    # perfect for tests too
 
 Yes, functional versions are provided too, because now they're trivial to implement.
+The decorator variants are simply partial applications of the corresponding methods.
+Note decorator syntax doesn't support arbitrary expressions, hence the name assignment.
 
 .. code-block:: python
 
-    wait(...).repeat(func, *args, **kwargs)
-    wait(...).retry(exception, func, *args, **kwargs)
-    wait(...).poll(predicate, func, *args, **kwargs)
+   backoff = wait(0.1) * 2
+
+   backoff.repeat(func, *args, **kwargs)
+   backoff.retry(exception, func, *args, **kwargs)
+   backoff.poll(predicate, func, *args, **kwargs)
+
+   @backoff.repeating
+   @backoff.retrying(exception)
+   @backoff.polling(predicate)
 
 But in the real world:
 

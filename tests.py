@@ -38,3 +38,22 @@ def test_waiting():
     elapsed = list(wait(0.1, timeout=1) * 2)
     assert elapsed[0] == 0.0
     assert 0.1 <= elapsed[1] < 0.3 <= elapsed[2] < 0.7 <= elapsed[3] < 1.0 <= elapsed[4] < 1.1
+
+
+def test_decorators():
+    w = wait(0)[:2]
+
+    @w.repeating
+    def func(x):
+        return x
+    assert ''.join(func('x')) == 'xxx'
+
+    @w.retrying(ValueError)
+    def func(it):
+        return int(next(it))
+    assert func(iter('ab0')) == 0
+
+    @w.polling(str.islower)
+    def func(it):
+        return next(it)
+    assert func(iter('ABc')) == 'c'

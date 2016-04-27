@@ -95,3 +95,15 @@ class wait(object):
     def poll(self, predicate, func, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
         return first(predicate, self.repeat(func, *args, **kwargs))
+
+    def repeating(self, func):
+        """A decorator for `repeat`."""
+        return partial(self.repeat, func)
+
+    def retrying(self, exception):
+        """Return a decorator for `retry`."""
+        return partial(partial, self.retry, exception)
+
+    def polling(self, predicate):
+        """Return a decorator for `poll`."""
+        return partial(partial, self.poll, predicate)

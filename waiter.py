@@ -1,10 +1,12 @@
 import collections
 import contextlib
 import itertools
+import operator
 import random
 import time
+from functools import partial
 try:
-    from future_builtins import filter
+    from future_builtins import filter, map
 except ImportError:
     pass
 
@@ -24,6 +26,11 @@ def suppress(*exceptions):
 def first(predicate, iterable, *default):
     """Return first item which evaluates to true, like `any` with filtering."""
     return next(filter(predicate, iterable), *default)
+
+
+class reiter(partial):
+    """A partial iterator which is re-iterable."""
+    __iter__ = partial.__call__
 
 
 class wait(object):
@@ -48,28 +55,31 @@ class wait(object):
             time.sleep(min(delay, remaining))
             yield time.time() - start
 
-    def clone(self, delays):
-        return type(self)(delays, self.timeout)
+    def clone(self, func, *args):
+        return type(self)(reiter(func, *args), self.timeout)
+
+    def map(self, func, *iterables):
+        return self.clone(map, func, self.delays, *iterables)
 
     def __getitem__(self, slc):
         """Slice delays, e.g., to limit attempt count."""
-        return self.clone(itertools.islice(self.delays, slc.start, slc.stop, slc.step))
+        return self.clone(itertools.islice, self.delays, slc.start, slc.stop, slc.step)
 
     def __le__(self, ceiling):
         """Limit maximum delay generated."""
-        return self.clone(min(delay, ceiling) for delay in self.delays)
+        return self.map(partial(min, ceiling))
 
     def __add__(self, step):
         """Generate incremental backoff."""
-        return self.clone(delay + (step * index) for index, delay in enumerate(self.delays))
+        return self.map(operator.add, reiter(itertools.count, 0, step))
 
     def __mul__(self, step):
         """Generate exponential backoff."""
-        return self.clone(delay * (step ** index) for index, delay in enumerate(self.delays))
+        return self.map(operator.mul, reiter(map, step.__pow__, reiter(itertools.count)))
 
     def random(self, start, stop):
         """Add random jitter within given range."""
-        return self.clone(delay + start + (stop - start) * random.random() for delay in self.delays)
+        return self.map(lambda delay: delay + random.uniform(start, stop))
 
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""

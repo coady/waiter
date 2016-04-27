@@ -1,5 +1,3 @@
-About waiter
-=========================
 .. image:: https://img.shields.io/pypi/v/waiter.svg
    :target: https://pypi.python.org/pypi/waiter/
 .. image:: https://img.shields.io/pypi/pyversions/waiter.svg
@@ -53,7 +51,7 @@ Timeouts also supported of course.
          ...
          break
 
-   for _ in wait(delays, timeout=n)       # standard convention for ignoring a loop variable
+   for _ in wait(delays, timeout)         # standard convention for ignoring a loop variable
       ...                                 # won't sleep past the timeout
       if ...:
          break
@@ -66,9 +64,9 @@ Yes, functional versions are provided too, because now they're trivial to implem
 
 .. code-block:: python
 
-    wait(delays).repeat(func, *args, **kwargs)
-    wait(delays).retry(exception, func, *args, **kwargs)
-    wait(delays).poll(predicate, func, *args, **kwargs)
+    wait(...).repeat(func, *args, **kwargs)
+    wait(...).retry(exception, func, *args, **kwargs)
+    wait(...).poll(predicate, func, *args, **kwargs)
 
 But in the real world:
 
@@ -78,7 +76,7 @@ But in the real world:
 * there may be complex handling of different exceptions or results
 
 So consider the block form, just as decorators don't render ``with`` blocks superfluous.
-Also note ``wait`` objects are re-iterable if and only if their underlying delays are.
+Also note ``wait`` objects are re-iterable provided their original delays were.
 
 Installation
 =========================

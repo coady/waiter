@@ -12,9 +12,9 @@ setup(
     license='Apache Software License',
     py_modules=['waiter'],
     tests_require=['pytest-cov'],
-    keywords=['wait', 'retry', 'poll', 'delay', 'sleep', 'backoff'],
+    keywords='wait retry poll delay sleep timeout incremental exponential backoff',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',

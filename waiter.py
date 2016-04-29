@@ -10,7 +10,7 @@ try:
 except ImportError:
     pass
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 
 @contextlib.contextmanager
@@ -34,7 +34,7 @@ class reiter(partial):
 
 
 class wait(object):
-    """Provide an iterator which sleeps for given delays.
+    """An iterable which sleeps for given delays.
 
     :param delays: any iterable of seconds, or a scalar which is repeated endlessly
     :param timeout: optional timeout for iteration

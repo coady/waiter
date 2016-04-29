@@ -7,7 +7,7 @@
 .. image:: https://img.shields.io/codecov/c/github/coady/waiter.svg
    :target: https://codecov.io/github/coady/waiter
 
-Does python need yet another retry / poll library?
+Does Python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.
 Decorators prevent the caller from customizing delay options.
 And even organizing the code around functions prevents custom handling of failures.
@@ -68,9 +68,9 @@ Note decorator syntax doesn't support arbitrary expressions, hence the name assi
 
    backoff = wait(0.1) * 2
 
-   backoff.repeat(func, *args, **kwargs)
-   backoff.retry(exception, func, *args, **kwargs)
-   backoff.poll(predicate, func, *args, **kwargs)
+   backoff.repeat(func, *args, **kwargs)           # generate results
+   backoff.retry(exception, func, *args, **kwargs) # return first success or re-raise exception
+   backoff.poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
 
    @backoff.repeating
    @backoff.retrying(exception)
@@ -104,6 +104,11 @@ Tests
 
 Changes
 =========================
+0.3
+
+* waiters behave as iterables instead of iterators
+* support for function decorators
+
 0.2
 
 * ``suppress`` context manager for exception handling

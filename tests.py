@@ -20,6 +20,17 @@ def test_constructors():
         assert 0 <= delay < 2
 
 
+def test_throttling():
+    w = wait([0] * 2)
+    assert ''.join(w.throttle('ab')) == 'ab'
+
+    it = iter('abcde')
+    throttled = w.throttle(it)
+    assert next(it) == 'a'
+    assert ''.join(throttled) == 'bcd'
+    assert next(it) == 'e'
+
+
 def test_functional():
     w = wait([0] * 2)
     assert w.retry(ValueError, lambda it: int(next(it)), iter('ab0')) == 0

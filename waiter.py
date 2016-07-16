@@ -81,6 +81,10 @@ class wait(object):
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
+    def throttle(self, iterable):
+        """Delay iteration."""
+        return self.repeat(next, iter(iterable))
+
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""
         return (func(*args, **kwargs) for _ in self)

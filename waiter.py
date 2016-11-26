@@ -6,7 +6,7 @@ import random
 import time
 from functools import partial
 try:
-    from future_builtins import filter, map
+    from future_builtins import filter, map, zip
 except ImportError:
     pass
 
@@ -83,7 +83,7 @@ class wait(object):
 
     def throttle(self, iterable):
         """Delay iteration."""
-        return self.repeat(next, iter(iterable))
+        return map(operator.itemgetter(1), zip(self, iterable))
 
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""

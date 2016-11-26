@@ -51,7 +51,7 @@ Timeouts also supported of course.
          ...
          break
 
-   for _ in wait(delays, timeout)         # standard convention for ignoring a loop variable
+   for _ in wait(delays, timeout):        # standard convention for ignoring a loop variable
       ...                                 # won't sleep past the timeout
       if ...:
          break

@@ -6,8 +6,8 @@ check:
 
 clean:
 	hg st -in | xargs rm
-	rm -rf dist waiter.egg-info
+	rm -rf build dist waiter.egg-info
 
 dist:
-	python setup.py sdist
+	python setup.py sdist bdist_wheel
 	rst2html.py README.rst $@/README.html

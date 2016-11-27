@@ -7,7 +7,7 @@ python:
   - "3.5"
 
 install:
-  - pip install pytest-cov codecov
+  - pip install -U pytest-cov codecov
 
 script:
   - py.test -v --cov

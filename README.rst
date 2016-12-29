@@ -106,6 +106,7 @@ Changes
 =========================
 dev
 
+* decorators support methods
 * iterables can be throttled
 
 0.3

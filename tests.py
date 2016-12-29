@@ -68,3 +68,21 @@ def test_decorators():
     def func(it):
         return next(it)
     assert func(iter('ABc')) == 'c'
+
+    class cls(object):
+        @w.repeating
+        def repeat(self):
+            return self
+
+        @w.retrying(Exception)
+        def retry(self):
+            return self
+
+        @w.polling(bool)
+        def poll(self):
+            return self
+
+    obj = cls()
+    assert next(obj.repeat()) is obj
+    assert obj.retry() is obj
+    assert obj.poll() is obj

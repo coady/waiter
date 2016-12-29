@@ -4,6 +4,7 @@ import itertools
 import operator
 import random
 import time
+import types
 from functools import partial
 try:
     from future_builtins import filter, map, zip
@@ -31,6 +32,12 @@ def first(predicate, iterable, *default):
 class reiter(partial):
     """A partial iterator which is re-iterable."""
     __iter__ = partial.__call__
+
+
+class partialmethod(partial):
+    """Backport of functools.partialmethod."""
+    def __get__(self, instance, owner):
+        return self if instance is None else types.MethodType(self, instance)
 
 
 class wait(object):
@@ -102,12 +109,12 @@ class wait(object):
 
     def repeating(self, func):
         """A decorator for `repeat`."""
-        return partial(self.repeat, func)
+        return partialmethod(self.repeat, func)
 
     def retrying(self, exception):
         """Return a decorator for `retry`."""
-        return partial(partial, self.retry, exception)
+        return partial(partialmethod, self.retry, exception)
 
     def polling(self, predicate):
         """Return a decorator for `poll`."""
-        return partial(partial, self.poll, predicate)
+        return partial(partialmethod, self.poll, predicate)

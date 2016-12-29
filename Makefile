@@ -1,8 +1,8 @@
 check:
 	python setup.py $@ -mrs
 	flake8
-	py.test-2.7 --cov
-	py.test-3.5 --cov --cov-append --cov-fail-under=100
+	pytest-2.7
+	pytest --cov --cov-fail-under=100
 
 clean:
 	hg st -in | xargs rm

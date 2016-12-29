@@ -100,10 +100,14 @@ Tests
 =========================
 100% branch coverage. ::
 
-   $ py.test [--cov]
+   $ pytest [--cov]
 
 Changes
 =========================
+dev
+
+* iterables can be throttled
+
 0.3
 
 * waiters behave as iterables instead of iterators

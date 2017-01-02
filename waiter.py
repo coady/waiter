@@ -11,7 +11,7 @@ try:
 except ImportError:
     pass
 
-__version__ = '0.3'
+__version__ = '0.4'
 
 
 @contextlib.contextmanager
@@ -97,7 +97,7 @@ class wait(object):
         return (func(*args, **kwargs) for _ in self)
 
     def retry(self, exception, func, *args, **kwargs):
-        """Repeat function call until no exception is raised."""
+        """Repeat function call until exception isn't raised."""
         for _ in self:
             with suppress(exception) as excs:
                 return func(*args, **kwargs)

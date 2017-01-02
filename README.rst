@@ -104,15 +104,15 @@ Tests
 
 Changes
 =========================
-dev
+0.4
 
-* decorators support methods
-* iterables can be throttled
+* Decorators support methods
+* Iterables can be throttled
 
 0.3
 
-* waiters behave as iterables instead of iterators
-* support for function decorators
+* Waiters behave as iterables instead of iterators
+* Support for function decorators
 
 0.2
 

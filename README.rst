@@ -104,6 +104,10 @@ Tests
 
 Changes
 =========================
+dev
+
+* Asynchronous iteration
+
 0.4
 
 * Decorators support methods

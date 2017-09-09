@@ -11,8 +11,6 @@ try:
 except ImportError:
     pass
 
-__version__ = '0.4'
-
 
 @contextlib.contextmanager
 def suppress(*exceptions):
@@ -40,7 +38,7 @@ class partialmethod(partial):
         return self if instance is None else types.MethodType(self, instance)
 
 
-class wait(object):
+class waiter(object):
     """An iterable which sleeps for given delays.
 
     :param delays: any iterable of seconds, or a scalar which is repeated endlessly

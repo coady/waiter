@@ -86,3 +86,20 @@ def test_decorators():
     assert next(obj.repeat()) is obj
     assert obj.retry() is obj
     assert obj.poll() is obj
+
+
+@pytest.mark.skipif(not hasattr(wait, '__aiter__'), reason='requires Python 3.6+')
+def test_async():
+    import asyncio
+    run = asyncio.get_event_loop().run_until_complete
+
+    anext = wait([]).__aiter__().__anext__
+    assert run(anext()) == 0.0
+    with pytest.raises(StopAsyncIteration):
+        run(anext())
+
+    anext = wait([0.1, 0.1], timeout=0.1).__aiter__().__anext__
+    assert run(anext()) == 0.0
+    assert run(anext()) > 0.0
+    with pytest.raises(StopAsyncIteration):
+        run(anext())

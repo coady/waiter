@@ -93,13 +93,29 @@ def test_async():
     import asyncio
     run = asyncio.get_event_loop().run_until_complete
 
-    anext = wait([]).__aiter__().__anext__
-    assert run(anext()) == 0.0
-    with pytest.raises(StopAsyncIteration):
-        run(anext())
+    ws = wait([]), wait(0)
+    for ait in (ws[0].throttle(ws[1]), ws[1].throttle(ws[0])):
+        anext = ait.__aiter__().__anext__
+        assert run(anext()) == 0.0
+        with pytest.raises(StopAsyncIteration):
+            run(anext())
 
     anext = wait([0.1, 0.1], timeout=0.1).__aiter__().__anext__
     assert run(anext()) == 0.0
     assert run(anext()) > 0.0
     with pytest.raises(StopAsyncIteration):
         run(anext())
+
+    w = wait([])
+    anext = w.repeat(asyncio.sleep, 0).__aiter__().__anext__
+    assert run(anext()) is None
+    with pytest.raises(StopAsyncIteration):
+        run(anext())
+
+    assert run(w.retry(TypeError, asyncio.sleep, 0)) is None
+    with pytest.raises(TypeError):
+        run(w.retry(TypeError, asyncio.sleep))
+
+    assert run(w.poll(None.__eq__, asyncio.sleep, 0)) is None
+    with pytest.raises(StopAsyncIteration):
+        run(w.poll(bool, asyncio.sleep, 0))

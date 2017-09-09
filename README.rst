@@ -61,17 +61,20 @@ Timeouts also supported of course.
    assert any(results)                    # perfect for tests too
 
 Yes, functional versions are provided too, because now they're trivial to implement.
+
+.. code-block:: python
+
+   wait(...).throttle(iterable)                      # generate items from iterable
+   wait(...).repeat(func, *args, **kwargs)           # generate results
+   wait(...).retry(exception, func, *args, **kwargs) # return first success or re-raise exception
+   wait(...).poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
+
 The decorator variants are simply partial applications of the corresponding methods.
 Note decorator syntax doesn't support arbitrary expressions, hence the name assignment.
 
 .. code-block:: python
 
    backoff = wait(0.1) * 2
-
-   backoff.repeat(func, *args, **kwargs)           # generate results
-   backoff.retry(exception, func, *args, **kwargs) # return first success or re-raise exception
-   backoff.poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
-
    @backoff.repeating
    @backoff.retrying(exception)
    @backoff.polling(predicate)
@@ -85,6 +88,10 @@ But in the real world:
 
 So consider the block form, just as decorators don't render ``with`` blocks superfluous.
 Also note ``wait`` objects are re-iterable provided their original delays were.
+
+In Python 3.6 or higher, waiters also support async iteration.
+``throttle`` optionally accepts an async iterable.
+``repeat``, ``retry``, and ``poll`` optionally accept coroutine functions.
 
 Installation
 =========================

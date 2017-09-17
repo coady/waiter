@@ -5,6 +5,8 @@ from .base import suppress, waiter
 
 
 class awaiter(waiter):
+    __doc__ = waiter.__doc__
+
     async def __aiter__(self):
         """Asynchronously generate a slow loop of elapsed time."""
         start = time.time()
@@ -50,7 +52,7 @@ class awaiter(waiter):
         return method(func, *args, **kwargs)
 
     def retry(self, exception, func, *args, **kwargs):
-        """Repeat function or coroutine  call until exception isn't raised."""
+        """Repeat function or coroutine call until exception isn't raised."""
         method = self.aretry if asyncio.iscoroutinefunction(func) else super().retry
         return method(exception, func, *args, **kwargs)
 

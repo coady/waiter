@@ -111,7 +111,7 @@ Tests
 
 Changes
 =========================
-dev
+0.5
 
 * Asynchronous iteration
 

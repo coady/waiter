@@ -10,9 +10,9 @@ setup(
     author_email='aric.coady@gmail.com',
     url='https://bitbucket.org/coady/waiter',
     license='Apache Software License',
-    py_modules=['waiter'],
+    packages=['waiter'],
     tests_require=['pytest-cov'],
-    keywords='wait retry poll delay sleep timeout incremental exponential backoff',
+    keywords='wait retry poll delay sleep timeout incremental exponential backoff async',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

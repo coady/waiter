@@ -11,6 +11,8 @@ setup(
     url='https://bitbucket.org/coady/waiter',
     license='Apache Software License',
     packages=['waiter'],
+    extras_require={':python_version>="3.6"': ['multimethod>=0.7']},
+    python_requires='~=2.7, >=3.4',
     tests_require=['pytest-cov'],
     keywords='wait retry poll delay sleep timeout incremental exponential backoff async',
     classifiers=[

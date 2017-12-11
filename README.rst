@@ -101,7 +101,8 @@ Installation
 
 Dependencies
 =========================
-* Python 2.7, 3.4+
+* Python ~=2.7, >=3.4
+* multimethod (if Python >=3.6)
 
 Tests
 =========================

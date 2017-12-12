@@ -1,5 +1,5 @@
 .. image:: https://img.shields.io/pypi/v/waiter.svg
-   :target: https://pypi.python.org/pypi/waiter/
+   :target: https://pypi.org/project/waiter/
 .. image:: https://img.shields.io/pypi/pyversions/waiter.svg
 .. image:: https://img.shields.io/pypi/status/waiter.svg
 .. image:: https://img.shields.io/travis/coady/waiter.svg
@@ -101,7 +101,6 @@ Installation
 
 Dependencies
 =========================
-* Python ~=2.7, >=3.4
 * multimethod (if Python >=3.6)
 
 Tests

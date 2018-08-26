@@ -6,8 +6,8 @@
 
 Does Python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.
-Decorators prevent the caller from customizing delay options.
-And even organizing the code around functions prevents custom handling of failures.
+Decorators prevent the caller from customizing delay options,
+and organizing the code around functions hinders any custom handling of failures.
 
 Waiter is built around iteration instead,
 because the foundation of retrying / polling is a slowly executing loop.
@@ -15,59 +15,61 @@ The resulting interface is both easier to use and more flexible,
 decoupling the delay algorithms from the application logic.
 
 # Usage
-Supply a number of seconds to repeat endlessly, or any iterable of
-seconds.
+## creation
+Supply a number of seconds to repeat endlessly, or any iterable of seconds.
 
 ```python
 from waiter import wait
 
-wait(1)              # 1, 1, 1, 1, ...
-wait([1] * 3)        # 1, 1, 1
-wait([0.5, 0.5, 60]) # circuit breaker
+wait(1)                 # 1, 1, 1, 1, ...
+wait([1] * 3)           # 1, 1, 1
+wait([0.5, 0.5, 60])    # circuit breaker
 ```
 
-So any delay algorithm is easily created, but constructors for common algorithms are also provided.
+Iterable delays can express any waiting strategy, and constructors for common algorithms are also provided.
 
 ```python
-wait(1) + 1       # incremental backoff 1, 2, 3, 4, ...
-w = wait(1) * 2   # exponential backoff 1, 2, 4, 8, ...
-w[:3]             # limit attempt count 1, 2, 4
-w <= 5            # set maximum delay   1, 2, 4, 5, 5, 5, ...
-w.random(-1, 1)   # add random jitter
+wait(1) + 1             # incremental backoff 1, 2, 3, 4, ...
+backoff = wait(1) * 2   # exponential backoff 1, 2, 4, 8, ...
+backoff[:3]             # limit attempt count 1, 2, 4
+backoff <= 5            # set maximum delay   1, 2, 4, 5, 5, 5, ...
+backoff.random(-1, 1)   # add random jitter
 ```
 
+## iteration
 Then simply use the `wait` object like any iterable, yielding the amount of elapsed time.
 Timeouts also supported of course.
 
 ```python
 from waiter import wait, suppress, first
 
-for elapsed in wait(delays):           # first iteration is immediate
-   with suppress(exception):           # then each subsequent iteration sleeps as necessary
-      ...
-      break
+for elapsed in wait(delays):            # first iteration is immediate
+    with suppress(exception):           # then each subsequent iteration sleeps as necessary
+        ...
+        break
 
-for _ in wait(delays, timeout):        # standard convention for ignoring a loop variable
-   ...                                 # won't sleep past the timeout
-   if ...:
-      break
+for _ in wait(delays, timeout):         # standard convention for ignoring a loop variable
+    ...                                 # won't sleep past the timeout
+    if ...:
+        break
 
-results = (... for _ in wait(delays))  # expressions are even easier
-first(predicate, results[, default])   # filter for first true item
-assert any(results)                    # perfect for tests too
+results = (... for _ in wait(delays))   # expressions are even easier
+first(predicate, results[, default])    # filter for first true item
+assert any(results)                     # perfect for tests too
 ```
 
-Yes, functional versions are provided too, because now they're trivial to implement.
+## functions
+Yes, functional versions are provided, as well as being trivial to implement.
 
 ```python
 wait(...).throttle(iterable)                      # generate items from iterable
-wait(...).repeat(func, *args, **kwargs)           # generate results
+wait(...).repeat(func, *args, **kwargs)           # generate successive results
 wait(...).retry(exception, func, *args, **kwargs) # return first success or re-raise exception
 wait(...).poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
 ```
 
 The decorator variants are simply partial applications of the corresponding methods.
-Note decorator syntax doesn't support arbitrary expressions, hence the name assignment.
+Note decorator syntax doesn't support arbitrary expressions.
 
 ```python
 backoff = wait(0.1) * 2
@@ -85,16 +87,24 @@ But in the real world:
 So consider the block form, just as decorators don* t render `with` blocks superfluous.
 Also note `wait` objects are re-iterable provided their original delays were.
 
+## async
 In Python 3.6 or higher, waiters also support async iteration.
 `throttle` optionally accepts an async iterable.
 `repeat`, `retry`, and `poll` optionally accept coroutine functions.
+
+## statistics
+Waiter objects have a `stats` attribute for aggregating statistics about the calls made.
+The base implementation provides `total` and `failure` counts.
+The interface of the `stats` object itself is considered provisional for now,
+but can be extended by overriding the `Stats` class attribute.
+This also allows customization of the iterable values; elapsed time is the default.
 
 # Installation
 
     $ pip install waiter
 
 # Dependencies
-* multimethod (if Python \>=3.6)
+* multimethod (if Python >=3.6)
 
 # Tests
 100% branch coverage.
@@ -102,6 +112,9 @@ In Python 3.6 or higher, waiters also support async iteration.
     $ pytest [--cov]
 
 # Changes
+dev
+* Extensible iterable values and statistics
+
 0.5
 * Asynchronous iteration
 

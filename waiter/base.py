@@ -38,27 +38,46 @@ class partialmethod(partial):
         return self if instance is None else types.MethodType(self, instance)
 
 
+class Stats(collections.Counter):
+    def add(self, attempt, elapsed):
+        """Record attempt and return next value."""
+        self[attempt] += 1
+        return elapsed
+
+    @property
+    def total(self):
+        """total number of attempts"""
+        return sum(self.values())
+
+    @property
+    def failures(self):
+        """number of repeat attempts"""
+        return self.total - self[0]
+
+
 class waiter(object):
     """An iterable which sleeps for given delays.
 
     :param delays: any iterable of seconds, or a scalar which is repeated endlessly
     :param timeout: optional timeout for iteration
     """
+    Stats = Stats
+
     def __init__(self, delays, timeout=float('inf')):
-        if not isinstance(delays, collections.Iterable):
-            delays = itertools.repeat(delays)
-        self.delays, self.timeout = delays, timeout
+        self.delays = delays if isinstance(delays, collections.Iterable) else itertools.repeat(delays)
+        self.timeout = timeout
+        self.stats = self.Stats()
 
     def __iter__(self):
         """Generate a slow loop of elapsed time."""
         start = time.time()
-        yield 0.0
-        for delay in self.delays:
+        yield self.stats.add(0, 0.0)
+        for attempt, delay in enumerate(self.delays, 1):
             remaining = start + self.timeout - time.time()
             if remaining < 0:
                 break
             time.sleep(min(delay, remaining))
-            yield time.time() - start
+            yield self.stats.add(attempt, time.time() - start)
 
     def clone(self, func, *args):
         return type(self)(reiter(func, *args), self.timeout)

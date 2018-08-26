@@ -88,6 +88,17 @@ def test_decorators():
     assert obj.poll() is obj
 
 
+def test_stats():
+    w = wait([0] * 2)
+    for index, elapsed in enumerate(w):
+        assert elapsed >= 0.0
+        assert w.stats.total == w.stats.failures + 1
+    assert w.stats == dict.fromkeys(range(3), 1)
+    assert next(iter(w)) == 0.0
+    assert w.stats.total == 4
+    assert w.stats.failures == 2
+
+
 @pytest.mark.skipif(not hasattr(wait, '__aiter__'), reason='requires Python 3.6+')
 def test_async():
     import asyncio
@@ -99,6 +110,10 @@ def test_async():
         assert run(anext()) == 0.0
         with pytest.raises(StopAsyncIteration):
             run(anext())
+    assert ws[0].stats.total == 2
+    assert ws[0].stats.failures == 0
+    assert ws[1].stats.total == 3
+    assert ws[1].stats.failures == 1
 
     anext = wait([0.1, 0.1], timeout=0.1).__aiter__().__anext__
     assert run(anext()) == 0.0

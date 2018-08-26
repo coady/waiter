@@ -14,13 +14,13 @@ class awaiter(waiter):
 
     async def __aiter__(self):
         start = time.time()
-        yield 0.0
-        for delay in self.delays:
+        yield self.stats.add(0, 0.0)
+        for attempt, delay in enumerate(self.delays, 1):
             remaining = start + self.timeout - time.time()
             if remaining < 0:
                 break
             await asyncio.sleep(min(delay, remaining))
-            yield time.time() - start
+            yield self.stats.add(attempt, time.time() - start)
     __aiter__.__doc__ = waiter.__iter__.__doc__
 
     @override

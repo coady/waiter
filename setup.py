@@ -8,7 +8,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Aric Coady',
     author_email='aric.coady@gmail.com',
-    url='https://bitbucket.org/coady/waiter',
+    url='https://github.com/coady/waiter',
     license='Apache Software License',
     packages=['waiter'],
     extras_require={':python_version>="3.6"': ['multimethod>=0.7']},

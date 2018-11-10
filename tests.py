@@ -13,6 +13,7 @@ def test_constructors():
 
     assert list(wait(1)[:3].delays) == [1, 1, 1]
     assert list((wait(range(5)) <= 3).delays) == [0, 1, 2, 3, 3]
+    assert list((wait(range(5)) >= 2).delays) == [2, 2, 2, 3, 4]
     assert list((wait(1)[:3] + 1).delays) == [1, 2, 3]
     w = wait(1)[:3] * 2
     assert list(w.delays) == list(w.delays) == [1, 2, 4]

@@ -1,6 +1,7 @@
 [![image](https://img.shields.io/pypi/v/waiter.svg)](https://pypi.org/project/waiter/)
 ![image](https://img.shields.io/pypi/pyversions/waiter.svg)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
+![image](https://img.shields.io/pypi/dm/waiter.svg)
 [![image](https://img.shields.io/travis/coady/waiter.svg)](https://travis-ci.org/coady/waiter)
 [![image](https://img.shields.io/codecov/c/github/coady/waiter.svg)](https://codecov.io/github/coady/waiter)
 
@@ -84,7 +85,7 @@ But in the real world:
 * logging may be required
 * there may be complex handling of different exceptions or results
 
-So consider the block form, just as decorators don* t render `with` blocks superfluous.
+So consider the block form, just as decorators don't render `with` blocks superfluous.
 Also note `wait` objects are re-iterable provided their original delays were.
 
 ## async

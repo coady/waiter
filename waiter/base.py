@@ -93,13 +93,17 @@ class waiter(object):
         """Limit maximum delay generated."""
         return self.map(partial(min, ceiling))
 
+    def __ge__(self, floor):
+        """Limit minimum delay generated."""
+        return self.map(partial(max, floor))
+
     def __add__(self, step):
         """Generate incremental backoff."""
         return self.map(operator.add, reiter(itertools.count, 0, step))
 
-    def __mul__(self, step):
+    def __mul__(self, factor):
         """Generate exponential backoff."""
-        return self.map(operator.mul, reiter(map, step.__pow__, reiter(itertools.count)))
+        return self.map(operator.mul, reiter(map, factor.__pow__, reiter(itertools.count)))
 
     def random(self, start, stop):
         """Add random jitter within given range."""

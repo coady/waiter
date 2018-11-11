@@ -12,6 +12,13 @@ except ImportError:
     pass
 
 
+def fibonacci(x, y):
+    """Generate fibonacci sequence."""
+    while True:
+        yield x
+        x, y = y, (x + y)
+
+
 @contextlib.contextmanager
 def suppress(*exceptions):
     """Backport of contextlib.suppress, which also records exception."""
@@ -83,7 +90,33 @@ class waiter(object):
         return type(self)(reiter(func, *args), self.timeout)
 
     def map(self, func, *iterables):
+        """Return new waiter with function mapped across delays."""
         return self.clone(map, func, self.delays, *iterables)
+
+    @classmethod
+    def fibonacci(cls, delay, **kwargs):
+        """Create waiter with fibonacci backoff."""
+        return cls(reiter(fibonacci, delay, delay), **kwargs)
+
+    @classmethod
+    def count(cls, *args, **kwargs):
+        """Create waiter based on `itertools.count`."""
+        return cls(reiter(itertools.count, *args), **kwargs)
+
+    @classmethod
+    def accumulate(cls, *args, **kwargs):
+        """Create waiter based on `itertools.accumulate` (requires Python 3)."""
+        return cls(reiter(itertools.accumulate, *args), **kwargs)
+
+    @classmethod
+    def exponential(cls, base, **kwargs):
+        """Create waiter with exponential backoff."""
+        return cls.count(**kwargs).map(base.__pow__)
+
+    @classmethod
+    def polynomial(cls, exp, **kwargs):
+        """Create waiter with polynomial backoff."""
+        return cls.count(**kwargs).map(exp.__rpow__)
 
     def __getitem__(self, slc):
         """Slice delays, e.g., to limit attempt count."""

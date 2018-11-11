@@ -1,3 +1,4 @@
+import itertools
 import pytest
 from waiter import wait, first
 
@@ -19,6 +20,13 @@ def test_constructors():
     assert list(w.delays) == list(w.delays) == [1, 2, 4]
     for delay in wait(1)[:100].random(-1, 1).delays:
         assert 0 <= delay < 2
+
+    assert list(wait.fibonacci(1)[:5].delays) == [1, 1, 2, 3, 5]
+    assert list(wait.count(1)[:5].delays) == [1, 2, 3, 4, 5]
+    if hasattr(itertools, 'accumulate'):
+        assert list(wait.accumulate(range(5)).delays) == [0, 1, 3, 6, 10]
+    assert list(wait.exponential(2)[:5].delays) == [1, 2, 4, 8, 16]
+    assert list(wait.polynomial(2)[:5].delays) == [0, 1, 4, 9, 16]
 
 
 def test_throttling():

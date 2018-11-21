@@ -1,4 +1,6 @@
 syntax: glob
 *.pyc
+docs/_build
 .coverage
 .pytest_cache
+.ipynb_checkpoints

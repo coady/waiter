@@ -21,7 +21,7 @@ def fibonacci(x, y):
 
 @contextlib.contextmanager
 def suppress(*exceptions):
-    """Backport of contextlib.suppress, which also records exception."""
+    """Backport of `contextlib.suppress`, which also records exception."""
     excs = []
     try:
         yield excs
@@ -46,6 +46,7 @@ class partialmethod(partial):
 
 
 class Stats(collections.Counter):
+    """Mapping of attempt counts."""
     def add(self, attempt, elapsed):
         """Record attempt and return next value."""
         self[attempt] += 1

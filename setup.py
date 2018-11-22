@@ -11,7 +11,7 @@ setup(
     url='https://github.com/coady/waiter',
     license='Apache Software License',
     packages=['waiter'],
-    extras_require={':python_version>="3.6"': ['multimethod>=0.7']},
+    extras_require={':python_version>="3.6"': ['multimethod>=0.7'], 'docs': ['nbsphinx', 'm2r']},
     python_requires='>=2.7',
     tests_require=['pytest-cov'],
     keywords='wait retry poll delay sleep timeout incremental exponential backoff async',

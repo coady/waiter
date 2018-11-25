@@ -121,7 +121,7 @@ This also allows customization of the iterable values; elapsed time is the defau
     $ pytest [--cov]
 
 # Changes
-dev
+0.6
 * Extensible iterable values and statistics
 * Additional constructors: fibonacci, polynomial, accumulate
 

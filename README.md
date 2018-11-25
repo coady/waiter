@@ -4,6 +4,9 @@
 ![image](https://img.shields.io/pypi/dm/waiter.svg)
 [![image](https://img.shields.io/travis/coady/waiter.svg)](https://travis-ci.org/coady/waiter)
 [![image](https://img.shields.io/codecov/c/github/coady/waiter.svg)](https://codecov.io/github/coady/waiter)
+[![image](https://readthedocs.org/projects/waiter/badge)](https://waiter.readthedocs.io)
+[![image](https://requires.io/github/coady/waiter/requirements.svg)](https://requires.io/github/coady/waiter/requirements/)
+[![image](https://api.codeclimate.com/v1/badges/21c4db3602347a7e794a/maintainability)](https://codeclimate.com/github/coady/waiter/maintainability)
 
 Does Python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.

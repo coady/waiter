@@ -1,1 +1,2 @@
 include LICENSE.txt tests.py
+recursive-include docs Makefile *.py *.rst *.ipynb

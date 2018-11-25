@@ -1,3 +1,6 @@
+all: check
+	make -C docs html SPHINXOPTS=-W
+
 check:
 	python3 setup.py $@ -ms
 	flake8
@@ -5,6 +8,7 @@ check:
 	pytest --cov --cov-fail-under=100
 
 clean:
+	make -C docs $@
 	hg st -in | xargs rm
 	rm -rf build dist waiter.egg-info
 

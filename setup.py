@@ -9,6 +9,9 @@ setup(
     author='Aric Coady',
     author_email='aric.coady@gmail.com',
     url='https://github.com/coady/waiter',
+    project_urls={
+        'Documentation': 'https://waiter.readthedocs.io',
+    },
     license='Apache Software License',
     packages=['waiter'],
     extras_require={

@@ -1,7 +1,7 @@
 [![image](https://img.shields.io/pypi/v/waiter.svg)](https://pypi.org/project/waiter/)
 ![image](https://img.shields.io/pypi/pyversions/waiter.svg)
+[![image](https://pepy.tech/badge/waiter)](https://pepy.tech/project/waiter)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
-![image](https://img.shields.io/pypi/dm/waiter.svg)
 [![image](https://img.shields.io/travis/coady/waiter.svg)](https://travis-ci.org/coady/waiter)
 [![image](https://img.shields.io/codecov/c/github/coady/waiter.svg)](https://codecov.io/github/coady/waiter)
 [![image](https://readthedocs.org/projects/waiter/badge)](https://waiter.readthedocs.io)

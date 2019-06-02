@@ -27,17 +27,17 @@ class awaiter(waiter):
     async def throttle(self, iterable: isa(collections.abc.AsyncIterable)):
         anext = iterable.__aiter__().__anext__
         with suppress(StopAsyncIteration):
-            async for _ in self:  # noqa
+            async for _ in self:
                 yield await anext()
 
     @override
     async def repeat(self, func: asyncio.iscoroutinefunction, *args, **kwargs):
-        async for _ in self:  # noqa
+        async for _ in self:
             yield await func(*args, **kwargs)
 
     @override
     async def retry(self, exception, func: asyncio.iscoroutinefunction, *args, **kwargs):
-        async for _ in self:  # noqa
+        async for _ in self:
             with suppress(exception) as excs:
                 return await func(*args, **kwargs)
         raise excs[0]

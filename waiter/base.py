@@ -72,7 +72,9 @@ class waiter(object):
     Stats = Stats
 
     def __init__(self, delays, timeout=float('inf')):
-        self.delays = delays if isinstance(delays, collections.Iterable) else itertools.repeat(delays)
+        with suppress(TypeError) as excs:
+            iter(delays)
+        self.delays = itertools.repeat(delays) if excs else delays
         self.timeout = timeout
         self.stats = self.Stats()
 

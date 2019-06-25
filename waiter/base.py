@@ -6,6 +6,7 @@ import random
 import time
 import types
 from functools import partial
+
 try:
     from future_builtins import filter, map, zip
 except ImportError:
@@ -36,17 +37,20 @@ def first(predicate, iterable, *default):
 
 class reiter(partial):
     """A partial iterator which is re-iterable."""
+
     __iter__ = partial.__call__
 
 
 class partialmethod(partial):
     """Backport of functools.partialmethod."""
+
     def __get__(self, instance, owner):
         return self if instance is None else types.MethodType(self, instance)
 
 
 class Stats(collections.Counter):
     """Mapping of attempt counts."""
+
     def add(self, attempt, elapsed):
         """Record attempt and return next value."""
         self[attempt] += 1
@@ -69,6 +73,7 @@ class waiter(object):
     :param delays: any iterable of seconds, or a scalar which is repeated endlessly
     :param timeout: optional timeout for iteration
     """
+
     Stats = Stats
 
     def __init__(self, delays, timeout=float('inf')):

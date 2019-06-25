@@ -66,16 +66,19 @@ def test_decorators():
     @w.repeating
     def func(x):
         return x
+
     assert ''.join(func('x')) == 'xxx'
 
     @w.retrying(ValueError)
     def func(it):
         return int(next(it))
+
     assert func(iter('ab0')) == 0
 
     @w.polling(str.islower)
     def func(it):
         return next(it)
+
     assert func(iter('ABc')) == 'c'
 
     class cls(object):
@@ -111,6 +114,7 @@ def test_stats():
 @pytest.mark.skipif(not hasattr(wait, '__aiter__'), reason='requires Python 3.6+')
 def test_async():
     import asyncio
+
     run = asyncio.get_event_loop().run_until_complete
 
     ws = wait([]), wait(0)

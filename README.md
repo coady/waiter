@@ -7,6 +7,7 @@
 [![image](https://readthedocs.org/projects/waiter/badge)](https://waiter.readthedocs.io)
 [![image](https://requires.io/github/coady/waiter/requirements.svg)](https://requires.io/github/coady/waiter/requirements/)
 [![image](https://api.codeclimate.com/v1/badges/21c4db3602347a7e794a/maintainability)](https://codeclimate.com/github/coady/waiter/maintainability)
+[![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 
 Does Python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.
@@ -97,7 +98,7 @@ So consider the block form, just as decorators don't render `with` blocks superf
 Also note `wait` objects are re-iterable provided their original delays were.
 
 ## async
-In Python 3.6 or higher, waiters also support async iteration.
+In Python >=3.6, waiters also support async iteration.
 `throttle` optionally accepts an async iterable.
 `repeat`, `retry`, and `poll` optionally accept coroutine functions.
 

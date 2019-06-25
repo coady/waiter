@@ -21,6 +21,7 @@ class awaiter(waiter):
                 break
             await asyncio.sleep(min(delay, remaining))
             yield self.stats.add(attempt, time.time() - start)
+
     __aiter__.__doc__ = waiter.__iter__.__doc__
 
     @override

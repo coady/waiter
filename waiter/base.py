@@ -154,6 +154,16 @@ class waiter(object):
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
 
+    def stream(self, queue):
+        """Generate chained values in batches from a mutable sequence."""
+        start = 0
+        for _ in self:  # pragma: no branch
+            values, start = queue[start:], len(queue)
+            if not values:
+                break
+            for value in values:
+                yield value
+
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""
         return (func(*args, **kwargs) for _ in self)

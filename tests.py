@@ -29,7 +29,7 @@ def test_constructors():
     assert list(wait.polynomial(2)[:5].delays) == [0, 1, 4, 9, 16]
 
 
-def test_throttling():
+def test_iteration():
     w = wait([0] * 2)
     assert ''.join(w.throttle('ab')) == 'ab'
 
@@ -38,6 +38,12 @@ def test_throttling():
     assert next(it) == 'a'
     assert ''.join(throttled) == 'bcd'
     assert next(it) == 'e'
+
+    coll = list('ab')
+    stream = w.stream(coll)
+    assert next(stream) == 'a'
+    coll.append('c')
+    assert ''.join(stream) == 'bc'
 
 
 def test_functional():

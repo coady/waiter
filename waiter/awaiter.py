@@ -1,6 +1,6 @@
 import asyncio
-import collections.abc
 import time
+from typing import AsyncIterable
 from multimethod import isa, overload
 from .base import suppress, waiter
 
@@ -25,7 +25,7 @@ class awaiter(waiter):
     __aiter__.__doc__ = waiter.__iter__.__doc__
 
     @override
-    async def throttle(self, iterable: isa(collections.abc.AsyncIterable)):
+    async def throttle(self, iterable: isa(AsyncIterable)):
         anext = iterable.__aiter__().__anext__
         with suppress(StopAsyncIteration):
             async for _ in self:

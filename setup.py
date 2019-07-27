@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='waiter',
-    version='0.6',
+    version='1.0',
     description='Delayed iteration for polling and retries.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

@@ -122,7 +122,7 @@ This also allows customization of the iterable values; elapsed time is the defau
     $ pytest [--cov]
 
 # Changes
-dev
+1.0
 * Map a function across an iterable in batches
 
 0.6

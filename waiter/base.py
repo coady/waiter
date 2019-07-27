@@ -164,6 +164,25 @@ class waiter(object):
             for value in values:
                 yield value
 
+    def suppressed(self, exception, func, iterable):
+        """Provisionally generate `arg, func(arg)` pairs while exception isn't raised."""
+        queue = list(iterable)
+        for arg in self.stream(queue):
+            try:
+                yield arg, func(arg)
+            except exception:
+                queue.append(arg)
+
+    def filtered(self, predicate, func, iterable):
+        """Provisionally generate `arg, func(arg)` pairs while predicate evaluates to true."""
+        queue = list(iterable)
+        for arg in self.stream(queue):
+            result = func(arg)
+            if predicate(result):
+                yield arg, result
+            else:
+                queue.append(arg)
+
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""
         return (func(*args, **kwargs) for _ in self)

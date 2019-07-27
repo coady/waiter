@@ -39,11 +39,9 @@ def test_iteration():
     assert ''.join(throttled) == 'bcd'
     assert next(it) == 'e'
 
-    coll = list('ab')
-    stream = w.stream(coll)
-    assert next(stream) == 'a'
-    coll.append('c')
-    assert ''.join(stream) == 'bc'
+    assert ''.join(w.stream('abc')) == 'abc'
+    assert list(w.suppressed(ValueError, int, 'a0')) == [('0', 0)]
+    assert list(w.filtered(str.isalpha, str.upper, iter('0a'))) == [('a', 'A')]
 
 
 def test_functional():

@@ -40,6 +40,13 @@ def test_iteration():
     assert next(it) == 'e'
 
     assert ''.join(w.stream('abc')) == 'abc'
+    assert ''.join(w.stream('abc', 2)) == 'abc'
+    assert ''.join(w.stream(iter('abc'), 2)) == 'abc'
+    seq = ['a']
+    it = w.stream(seq)
+    assert next(it) == 'a'
+    seq.append('b')
+    assert list(it) == ['b']
     assert list(w.suppressed(ValueError, int, 'a0')) == [('0', 0)]
     assert list(w.filtered(str.isalpha, str.upper, iter('0a'))) == [('a', 'A')]
 

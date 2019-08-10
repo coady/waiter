@@ -9,8 +9,9 @@ from functools import partial
 
 try:
     from future_builtins import filter, map, zip
+    from collections import Sequence  # pragma: no cover
 except ImportError:
-    pass
+    from typing import Sequence
 
 
 def fibonacci(x, y):
@@ -65,6 +66,15 @@ class Stats(collections.Counter):
     def failures(self):
         """number of repeat attempts"""
         return self.total - self[0]
+
+
+def grouped(queue, size=None):
+    """Generate slices from a sequence without relying on a fixed `len`."""
+    group, start = queue[:size], 0
+    while group:
+        start += len(group)
+        yield group
+        group = queue[start : size and start + size]
 
 
 class waiter(object):
@@ -154,15 +164,16 @@ class waiter(object):
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
 
-    def stream(self, queue):
-        """Generate chained values in batches from a mutable sequence."""
-        start = 0
-        for _ in self:  # pragma: no branch
-            values, start = queue[start:], len(queue)
-            if not values:
-                break
-            for value in values:
-                yield value
+    def stream(self, queue, size=None):
+        """Generate chained values in groups from an iterable.
+
+        The queue can be extended while in use.
+        """
+        it = iter(queue)
+        groups = iter(lambda: list(itertools.islice(it, size)), [])
+        if isinstance(queue, Sequence):
+            groups = grouped(queue, size)
+        return itertools.chain.from_iterable(self.throttle(groups))
 
     def suppressed(self, exception, func, iterable):
         """Provisionally generate `arg, func(arg)` pairs while exception isn't raised."""

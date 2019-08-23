@@ -1,2 +1,2 @@
-include LICENSE.txt tests.py
+include LICENSE.txt pyproject.toml tests.py
 recursive-include docs Makefile *.py *.rst *.ipynb

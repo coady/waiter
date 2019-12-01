@@ -14,7 +14,7 @@ setup(
     packages=['waiter'],
     extras_require={
         ':python_version>="3.6"': ['multimethod>=0.7'],
-        'docs': ['nbsphinx', 'm2r', 'jupyter', 'aiohttp'],
+        'docs': ['nbsphinx', 'm2r', 'jupyter', 'httpx'],
     },
     python_requires='>=2.7',
     tests_require=['pytest-cov'],
@@ -30,6 +30,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 )

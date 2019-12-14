@@ -122,6 +122,9 @@ This also allows customization of the iterable values; elapsed time is the defau
     $ pytest [--cov]
 
 # Changes
+1.1
+* Stream from sized groups
+
 1.0
 * Map a function across an iterable in batches
 

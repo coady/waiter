@@ -16,7 +16,7 @@ setup(
         ':python_version>="3.6"': ['multimethod>=0.7'],
         'docs': ['nbsphinx', 'm2r', 'jupyter', 'httpx'],
     },
-    python_requires='>=2.7',
+    python_requires='>=3.5',
     tests_require=['pytest-cov'],
     keywords='wait retry poll delay sleep timeout incremental exponential backoff async',
     classifiers=[
@@ -24,8 +24,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

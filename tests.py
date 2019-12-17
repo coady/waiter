@@ -1,3 +1,4 @@
+import asyncio
 import itertools
 import pytest
 from waiter import wait, first
@@ -92,7 +93,7 @@ def test_decorators():
 
     assert func(iter('ABc')) == 'c'
 
-    class cls(object):
+    class cls:
         @w.repeating
         def repeat(self):
             return self
@@ -124,8 +125,6 @@ def test_stats():
 
 @pytest.mark.skipif(not hasattr(wait, '__aiter__'), reason='requires Python 3.6+')
 def test_async():
-    import asyncio
-
     run = asyncio.get_event_loop().run_until_complete
 
     ws = wait([]), wait(0)

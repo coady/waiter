@@ -6,12 +6,7 @@ import random
 import time
 import types
 from functools import partial
-
-try:
-    from future_builtins import filter, map, zip
-    from collections import Sequence  # pragma: no cover
-except ImportError:
-    from typing import Sequence
+from typing import Sequence
 
 
 def fibonacci(x, y):
@@ -23,7 +18,7 @@ def fibonacci(x, y):
 
 @contextlib.contextmanager
 def suppress(*exceptions):
-    """Backport of `contextlib.suppress`, which also records exception."""
+    """Variant of `contextlib.suppress`, which also records exception."""
     excs = []
     try:
         yield excs
@@ -43,7 +38,7 @@ class reiter(partial):
 
 
 class partialmethod(partial):
-    """Backport of functools.partialmethod."""
+    """Variant of functools.partialmethod."""
 
     def __get__(self, instance, owner):
         return self if instance is None else types.MethodType(self, instance)
@@ -77,7 +72,7 @@ def grouped(queue, size=None):
         group = queue[start : size and start + size]
 
 
-class waiter(object):
+class waiter:
     """An iterable which sleeps for given delays.
 
     :param delays: any iterable of seconds, or a scalar which is repeated endlessly

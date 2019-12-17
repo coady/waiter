@@ -1,5 +1,5 @@
 [![image](https://img.shields.io/pypi/v/waiter.svg)](https://pypi.org/project/waiter/)
-[![image](https://img.shields.io/pypi/pyversions/waiter.svg)](https://python3statement.org)
+![image](https://img.shields.io/pypi/pyversions/waiter.svg)
 [![image](https://pepy.tech/badge/waiter)](https://pepy.tech/project/waiter)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
 [![image](https://img.shields.io/travis/coady/waiter.svg)](https://travis-ci.org/coady/waiter)
@@ -122,6 +122,9 @@ This also allows customization of the iterable values; elapsed time is the defau
     $ pytest [--cov]
 
 # Changes
+dev
+* Python 3 required
+
 1.1
 * Stream from sized groups
 

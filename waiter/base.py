@@ -6,7 +6,7 @@ import random
 import time
 import types
 from functools import partial
-from typing import Sequence
+from typing import Callable, Iterable, Iterator, Sequence
 
 
 def fibonacci(x, y):
@@ -26,7 +26,7 @@ def suppress(*exceptions):
         excs.append(exc)
 
 
-def first(predicate, iterable, *default):
+def first(predicate: Callable, iterable: Iterable, *default):
     """Return first item which evaluates to true, like `any` with filtering."""
     return next(filter(predicate, iterable), *default)
 
@@ -102,56 +102,56 @@ class waiter:
     def clone(self, func, *args):
         return type(self)(reiter(func, *args), self.timeout)
 
-    def map(self, func, *iterables):
+    def map(self, func: Callable, *iterables: Iterable) -> 'waiter':
         """Return new waiter with function mapped across delays."""
         return self.clone(map, func, self.delays, *iterables)
 
     @classmethod
-    def fibonacci(cls, delay, **kwargs):
+    def fibonacci(cls, delay, **kwargs) -> 'waiter':
         """Create waiter with fibonacci backoff."""
         return cls(reiter(fibonacci, delay, delay), **kwargs)
 
     @classmethod
-    def count(cls, *args, **kwargs):
+    def count(cls, *args, **kwargs) -> 'waiter':
         """Create waiter based on `itertools.count`."""
         return cls(reiter(itertools.count, *args), **kwargs)
 
     @classmethod
-    def accumulate(cls, *args, **kwargs):
+    def accumulate(cls, *args, **kwargs) -> 'waiter':
         """Create waiter based on `itertools.accumulate` (requires Python 3)."""
         return cls(reiter(itertools.accumulate, *args), **kwargs)
 
     @classmethod
-    def exponential(cls, base, **kwargs):
+    def exponential(cls, base, **kwargs) -> 'waiter':
         """Create waiter with exponential backoff."""
         return cls.count(**kwargs).map(base.__pow__)
 
     @classmethod
-    def polynomial(cls, exp, **kwargs):
+    def polynomial(cls, exp, **kwargs) -> 'waiter':
         """Create waiter with polynomial backoff."""
         return cls.count(**kwargs).map(exp.__rpow__)
 
-    def __getitem__(self, slc):
+    def __getitem__(self, slc: slice) -> 'waiter':
         """Slice delays, e.g., to limit attempt count."""
         return self.clone(itertools.islice, self.delays, slc.start, slc.stop, slc.step)
 
-    def __le__(self, ceiling):
+    def __le__(self, ceiling) -> 'waiter':
         """Limit maximum delay generated."""
         return self.map(partial(min, ceiling))
 
-    def __ge__(self, floor):
+    def __ge__(self, floor) -> 'waiter':
         """Limit minimum delay generated."""
         return self.map(partial(max, floor))
 
-    def __add__(self, step):
+    def __add__(self, step) -> 'waiter':
         """Generate incremental backoff."""
         return self.map(operator.add, reiter(itertools.count, 0, step))
 
-    def __mul__(self, factor):
+    def __mul__(self, factor) -> 'waiter':
         """Generate exponential backoff."""
         return self.map(operator.mul, reiter(map, factor.__pow__, reiter(itertools.count)))
 
-    def random(self, start, stop):
+    def random(self, start, stop) -> 'waiter':
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
@@ -159,7 +159,7 @@ class waiter:
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
 
-    def stream(self, queue, size=None):
+    def stream(self, queue: Sequence, size: int = None) -> Iterator:
         """Generate chained values in groups from an iterable.
 
         The queue can be extended while in use.
@@ -170,7 +170,7 @@ class waiter:
             groups = grouped(queue, size)
         return itertools.chain.from_iterable(self.throttle(groups))
 
-    def suppressed(self, exception, func, iterable):
+    def suppressed(self, exception, func: Callable, iterable: Iterable) -> Iterator[tuple]:
         """Provisionally generate `arg, func(arg)` pairs while exception isn't raised."""
         queue = list(iterable)
         for arg in self.stream(queue):
@@ -179,7 +179,7 @@ class waiter:
             except exception:
                 queue.append(arg)
 
-    def filtered(self, predicate, func, iterable):
+    def filtered(self, predicate: Callable, func: Callable, iterable: Iterable) -> Iterator[tuple]:
         """Provisionally generate `arg, func(arg)` pairs while predicate evaluates to true."""
         queue = list(iterable)
         for arg in self.stream(queue):
@@ -204,14 +204,14 @@ class waiter:
         """Repeat function call until predicate evaluates to true."""
         return first(predicate, self.repeat(func, *args, **kwargs))
 
-    def repeating(self, func):
+    def repeating(self, func: Callable):
         """A decorator for `repeat`."""
         return partialmethod(self.repeat, func)
 
-    def retrying(self, exception):
+    def retrying(self, exception: Exception):
         """Return a decorator for `retry`."""
         return partial(partialmethod, self.retry, exception)
 
-    def polling(self, predicate):
+    def polling(self, predicate: Callable):
         """Return a decorator for `poll`."""
         return partial(partialmethod, self.poll, predicate)

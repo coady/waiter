@@ -8,6 +8,7 @@
 [![image](https://requires.io/github/coady/waiter/requirements.svg)](https://requires.io/github/coady/waiter/requirements/)
 [![image](https://api.codeclimate.com/v1/badges/21c4db3602347a7e794a/maintainability)](https://codeclimate.com/github/coady/waiter/maintainability)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
+[![image](http://mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
 Does Python need yet another retry / poll library?
 It needs at least one that isn't coupled to decorators and functions.

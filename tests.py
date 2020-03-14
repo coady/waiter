@@ -123,7 +123,6 @@ def test_stats():
     assert w.stats.failures == 2
 
 
-@pytest.mark.skipif(not hasattr(wait, '__aiter__'), reason='requires Python 3.6+')
 def test_async():
     run = asyncio.get_event_loop().run_until_complete
 

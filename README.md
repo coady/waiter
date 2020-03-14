@@ -99,7 +99,7 @@ So consider the block form, just as decorators don't render `with` blocks superf
 Also note `wait` objects are re-iterable provided their original delays were.
 
 ## async
-In Python >=3.6, waiters also support async iteration.
+Waiters also support async iteration.
 `throttle` optionally accepts an async iterable.
 `repeat`, `retry`, and `poll` optionally accept coroutine functions.
 
@@ -111,20 +111,23 @@ but can be extended by overriding the `Stats` class attribute.
 This also allows customization of the iterable values; elapsed time is the default.
 
 # Installation
-
-    $ pip install waiter
+```console
+% pip install waiter
+```
 
 # Dependencies
-* multimethod (if Python >=3.6)
+* multimethod
 
 # Tests
 100% branch coverage.
 
-    $ pytest [--cov]
+```console
+% pytest [--cov]
+```
 
 # Changes
 dev
-* Python 3 required
+* Python >=3.6 required
 
 1.1
 * Stream from sized groups

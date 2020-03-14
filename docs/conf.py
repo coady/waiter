@@ -21,7 +21,7 @@ import waiter
 # -- Project information -----------------------------------------------------
 
 project = 'waiter'
-copyright = '2019, Aric Coady'
+copyright = '2020, Aric Coady'
 author = 'Aric Coady'
 
 # The short X.Y version

@@ -1,3 +1,5 @@
+# type: ignore[no-redef]
+import asyncio
 import collections
 import contextlib
 import itertools
@@ -6,7 +8,11 @@ import random
 import time
 import types
 from functools import partial
-from typing import Callable, Iterable, Iterator, Sequence
+from typing import AsyncIterable, Callable, Iterable, Iterator, Sequence
+from multimethod import multimethod, overload  # type: ignore
+
+__version__ = '1.1'
+iscoro = asyncio.iscoroutinefunction
 
 
 def fibonacci(x, y):
@@ -99,6 +105,17 @@ class waiter:
             time.sleep(min(delay, remaining))
             yield self.stats.add(attempt, time.time() - start)
 
+    async def __aiter__(self):
+        """Asynchronously generate a slow loop of elapsed time."""
+        start = time.time()
+        yield self.stats.add(0, 0.0)
+        for attempt, delay in enumerate(self.delays, 1):
+            remaining = start + self.timeout - time.time()
+            if remaining < 0:
+                break
+            await asyncio.sleep(min(delay, remaining))
+            yield self.stats.add(attempt, time.time() - start)
+
     def clone(self, func, *args):
         return type(self)(reiter(func, *args), self.timeout)
 
@@ -155,9 +172,17 @@ class waiter:
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
+    @multimethod
     def throttle(self, iterable):
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
+
+    @multimethod
+    async def throttle(self, iterable: AsyncIterable):
+        anext = iterable.__aiter__().__anext__
+        with suppress(StopAsyncIteration):
+            async for _ in self:
+                yield await anext()
 
     def stream(self, queue: Sequence, size: int = None) -> Iterator:
         """Generate chained values in groups from an iterable.
@@ -189,10 +214,17 @@ class waiter:
             else:
                 queue.append(arg)
 
+    @overload
     def repeat(self, func, *args, **kwargs):
         """Repeat function call."""
         return (func(*args, **kwargs) for _ in self)
 
+    @overload
+    async def repeat(self, func: iscoro, *args, **kwargs):  # type: ignore
+        async for _ in self:
+            yield await func(*args, **kwargs)  # type: ignore
+
+    @overload
     def retry(self, exception, func, *args, **kwargs):
         """Repeat function call until exception isn't raised."""
         for _ in self:
@@ -200,9 +232,24 @@ class waiter:
                 return func(*args, **kwargs)
         raise excs[0]
 
+    @overload
+    async def retry(self, exception, func: iscoro, *args, **kwargs):  # type: ignore
+        async for _ in self:
+            with suppress(exception) as excs:
+                return await func(*args, **kwargs)  # type: ignore
+        raise excs[0]
+
+    @overload
     def poll(self, predicate, func, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
         return first(predicate, self.repeat(func, *args, **kwargs))
+
+    @overload
+    async def poll(self, predicate, func: iscoro, *args, **kwargs):  # type: ignore
+        async for result in self.repeat(func, *args, **kwargs):
+            if predicate(result):
+                return result
+        raise StopAsyncIteration
 
     def repeating(self, func: Callable):
         """A decorator for `repeat`."""
@@ -215,3 +262,6 @@ class waiter:
     def polling(self, predicate: Callable):
         """Return a decorator for `poll`."""
         return partial(partialmethod, self.poll, predicate)
+
+
+wait = waiter

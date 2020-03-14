@@ -2,13 +2,9 @@ Reference
 =============
 .. automodule:: waiter
 
-wait
-^^^^^^^^^^^
-.. autoclass:: wait
-
 waiter
 ^^^^^^^^^^^
-.. autoclass:: waiter.base.waiter
+.. autoclass:: waiter
    :members:
    :special-members:
    :exclude-members: __weakref__, Stats
@@ -21,15 +17,6 @@ waiter
 
       `Stats`_ instance attribute
 
-awaiter
-^^^^^^^^^^^
-.. autoclass:: waiter.awaiter.awaiter
-   :show-inheritance:
-   :members:
-   :special-members:
-
-   .. note:: Overloads for async coroutine functions.
-
 suppress
 ^^^^^^^^^^^
 .. autofunction:: suppress
@@ -40,7 +27,7 @@ first
 
 Stats
 ^^^^^^^^^^^
-.. autoclass:: waiter.base.Stats
+.. autoclass:: Stats
    :show-inheritance:
    :members:
    :special-members:

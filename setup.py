@@ -13,7 +13,7 @@ setup(
     license='Apache Software License',
     py_modules=['waiter'],
     install_requires=['multimethod>=1.0'],
-    extras_require={'docs': ['nbsphinx', 'm2r', 'jupyter', 'httpx']},
+    extras_require={'docs': ['recommonmark', 'nbsphinx', 'jupyter', 'httpx']},
     python_requires='>=3.6',
     tests_require=['pytest-cov'],
     keywords='wait retry poll delay sleep timeout incremental exponential backoff async',

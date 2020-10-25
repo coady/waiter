@@ -11,7 +11,9 @@ setup(
     url='https://github.com/coady/waiter',
     project_urls={'Documentation': 'https://coady.github.io/waiter'},
     license='Apache Software License',
-    py_modules=['waiter'],
+    packages=['waiter'],
+    package_data={'waiter': ['py.typed']},
+    zip_safe=False,
     install_requires=['multimethod>=1.0'],
     extras_require={'docs': open('docs/requirements.txt').read().splitlines()},
     python_requires='>=3.6',
@@ -28,5 +30,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Topic :: Software Development :: Libraries :: Python Modules',
+        'Typing :: Typed',
     ],
 )

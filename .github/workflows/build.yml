@@ -43,5 +43,6 @@ jobs:
       with:
         python-version: 3.x
     - run: |
+        pip install multimethod
         pip install -r docs/requirements.txt
         PYTHONPATH=$PWD mkdocs build

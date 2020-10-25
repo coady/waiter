@@ -1,0 +1,22 @@
+site_name: waiter
+site_description: Delayed iteration for polling and retries.
+theme: material
+
+repo_name: coady/waiter
+repo_url: https://github.com/coady/waiter
+edit_uri: ""
+
+nav:
+  - Introduction: index.md
+  - Reference: reference.md
+  - Examples: examples.ipynb
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          rendering:
+            show_root_heading: true
+  - mkdocs-jupyter:
+      execute: True

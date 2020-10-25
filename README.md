@@ -2,11 +2,9 @@
 ![image](https://img.shields.io/pypi/pyversions/waiter.svg)
 [![image](https://pepy.tech/badge/waiter)](https://pepy.tech/project/waiter)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
-[![image](https://img.shields.io/travis/coady/waiter.svg)](https://travis-ci.org/coady/waiter)
+[![image](https://github.com/coady/waiter/workflows/build/badge.svg)](https://github.com/coady/waiter/actions)
 [![image](https://img.shields.io/codecov/c/github/coady/waiter.svg)](https://codecov.io/github/coady/waiter)
-[![image](https://readthedocs.org/projects/waiter/badge)](https://waiter.readthedocs.io)
-[![image](https://requires.io/github/coady/waiter/requirements.svg)](https://requires.io/github/coady/waiter/requirements/)
-[![image](https://api.codeclimate.com/v1/badges/21c4db3602347a7e794a/maintainability)](https://codeclimate.com/github/coady/waiter/maintainability)
+[![image](https://requires.io/github/coady/waiter/requirements.svg?branch=main)](https://requires.io/github/coady/waiter/requirements/)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 [![image](http://mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
@@ -20,8 +18,8 @@ because the foundation of retrying / polling is a slowly executing loop.
 The resulting interface is both easier to use and more flexible,
 decoupling the delay algorithms from the application logic.
 
-# Usage
-## creation
+## Usage
+### creation
 Supply a number of seconds to repeat endlessly, or any iterable of seconds.
 
 ```python
@@ -47,7 +45,7 @@ backoff <= 5            # set maximum delay   1, 2, 4, 5, 5, 5, ...
 backoff.random(-1, 1)   # add random jitter
 ```
 
-## iteration
+### iteration
 Then simply use the `wait` object like any iterable, yielding the amount of elapsed time.
 Timeouts also supported of course.
 
@@ -69,7 +67,7 @@ first(predicate, results[, default])    # filter for first true item
 assert any(results)                     # perfect for tests too
 ```
 
-## functions
+### functions
 Yes, functional versions are provided, as well as being trivial to implement.
 
 ```python
@@ -98,59 +96,67 @@ But in the real world:
 So consider the block form, just as decorators don't render `with` blocks superfluous.
 Also note `wait` objects are re-iterable provided their original delays were.
 
-## async
+### async
 Waiters also support async iteration.
 `throttle` optionally accepts an async iterable.
 `repeat`, `retry`, and `poll` optionally accept coroutine functions.
 
-## statistics
+### statistics
 Waiter objects have a `stats` attribute for aggregating statistics about the calls made.
 The base implementation provides `total` and `failure` counts.
 The interface of the `stats` object itself is considered provisional for now,
 but can be extended by overriding the `Stats` class attribute.
 This also allows customization of the iterable values; elapsed time is the default.
 
-# Installation
+## Installation
 ```console
 % pip install waiter
 ```
 
-# Dependencies
+## Dependencies
 * multimethod
 
-# Tests
+## Tests
 100% branch coverage.
 
 ```console
 % pytest [--cov]
 ```
 
-# Changes
+## Changes
 dev
+
 * Python >=3.6 required
 
 1.1
+
 * Stream from sized groups
 
 1.0
+
 * Map a function across an iterable in batches
 
 0.6
+
 * Extensible iterable values and statistics
 * Additional constructors: fibonacci, polynomial, accumulate
 
 0.5
+
 * Asynchronous iteration
 
 0.4
+
 * Decorators support methods
 * Iterables can be throttled
 
 0.3
+
 * Waiters behave as iterables instead of iterators
 * Support for function decorators
 
 0.2
+
 * `suppress` context manager for exception handling
 * `repeat` method for decoupled iteration
 * `first` function for convenient filtering

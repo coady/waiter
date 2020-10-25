@@ -23,7 +23,7 @@ def fibonacci(x, y):
 
 
 @contextlib.contextmanager
-def suppress(*exceptions):
+def suppress(*exceptions: Exception):
     """Variant of `contextlib.suppress`, which also records exception."""
     excs = []
     try:
@@ -81,8 +81,9 @@ def grouped(queue, size=None):
 class waiter:
     """An iterable which sleeps for given delays.
 
-    :param delays: any iterable of seconds, or a scalar which is repeated endlessly
-    :param timeout: optional timeout for iteration
+    Args:
+        delays: any iterable of seconds, or a scalar which is repeated endlessly
+        timeout: optional timeout for iteration
     """
 
     Stats = Stats

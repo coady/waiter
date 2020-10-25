@@ -1,0 +1,6 @@
+mkdocs-material
+mkdocstrings
+mkdocs-jupyter
+ipykernel
+httpx
+requests

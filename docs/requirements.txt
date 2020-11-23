@@ -1,3 +1,4 @@
+multimethod
 mkdocs-material
 mkdocstrings
 mkdocs-jupyter

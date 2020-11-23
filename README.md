@@ -3,8 +3,8 @@
 [![image](https://pepy.tech/badge/waiter)](https://pepy.tech/project/waiter)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
 [![image](https://github.com/coady/waiter/workflows/build/badge.svg)](https://github.com/coady/waiter/actions)
-[![image](https://img.shields.io/codecov/c/github/coady/waiter.svg)](https://codecov.io/github/coady/waiter)
-[![image](https://requires.io/github/coady/waiter/requirements.svg?branch=main)](https://requires.io/github/coady/waiter/requirements/)
+[![image](https://codecov.io/gh/coady/waiter/branch/main/graph/badge.svg)](https://codecov.io/gh/coady/waiter/)
+[![image](https://github.com/coady/waiter/workflows/codeql/badge.svg)](https://github.com/coady/waiter/security/code-scanning)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 [![image](http://mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 

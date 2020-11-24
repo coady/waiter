@@ -136,7 +136,7 @@ class waiter:
 
     @classmethod
     def accumulate(cls, *args, **kwargs) -> 'waiter':
-        """Create waiter based on `itertools.accumulate` (requires Python 3)."""
+        """Create waiter based on `itertools.accumulate`."""
         return cls(reiter(itertools.accumulate, *args), **kwargs)
 
     @classmethod
@@ -197,7 +197,7 @@ class waiter:
         return itertools.chain.from_iterable(self.throttle(groups))
 
     def suppressed(self, exception, func: Callable, iterable: Iterable) -> Iterator[tuple]:
-        """Provisionally generate `arg, func(arg)` pairs while exception isn't raised."""
+        """Generate `arg, func(arg)` pairs while exception isn't raised."""
         queue = list(iterable)
         for arg in self.stream(queue):
             try:
@@ -206,7 +206,7 @@ class waiter:
                 queue.append(arg)
 
     def filtered(self, predicate: Callable, func: Callable, iterable: Iterable) -> Iterator[tuple]:
-        """Provisionally generate `arg, func(arg)` pairs while predicate evaluates to true."""
+        """Generate `arg, func(arg)` pairs while predicate evaluates to true."""
         queue = list(iterable)
         for arg in self.stream(queue):
             result = func(arg)
@@ -253,15 +253,15 @@ class waiter:
         raise StopAsyncIteration
 
     def repeating(self, func: Callable):
-        """A decorator for `repeat`."""
+        """A decorator for [repeat][waiter.wait.repeat]."""
         return partialmethod(self.repeat, func)
 
     def retrying(self, exception: Exception):
-        """Return a decorator for `retry`."""
+        """Return a decorator for [retry][waiter.wait.retry]."""
         return partial(partialmethod, self.retry, exception)
 
     def polling(self, predicate: Callable):
-        """Return a decorator for `poll`."""
+        """Return a decorator for [poll][waiter.wait.poll]."""
         return partial(partialmethod, self.poll, predicate)
 
 

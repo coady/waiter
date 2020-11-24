@@ -8,15 +8,9 @@
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
 [![image](http://mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
 
-Does Python need yet another retry / poll library?
-It needs at least one that isn't coupled to decorators and functions.
-Decorators prevent the caller from customizing delay options,
-and organizing the code around functions hinders any custom handling of failures.
+Does Python need yet another retry / poll library? It needs at least one that isn't coupled to decorators and functions. Decorators prevent the caller from customizing delay options, and organizing the code around functions hinders any custom handling of failures.
 
-Waiter is built around iteration instead,
-because the foundation of retrying / polling is a slowly executing loop.
-The resulting interface is both easier to use and more flexible,
-decoupling the delay algorithms from the application logic.
+Waiter is built around iteration instead, because the foundation of retrying / polling is a slowly executing loop. The resulting interface is both easier to use and more flexible, decoupling the delay algorithms from the application logic.
 
 ## Usage
 ### creation
@@ -46,8 +40,7 @@ backoff.random(-1, 1)   # add random jitter
 ```
 
 ### iteration
-Then simply use the `wait` object like any iterable, yielding the amount of elapsed time.
-Timeouts also supported of course.
+Then simply use the `wait` object like any iterable, yielding the amount of elapsed time. Timeouts also supported of course.
 
 ```python
 from waiter import wait, suppress, first
@@ -77,8 +70,7 @@ wait(...).retry(exception, func, *args, **kwargs) # return first success or re-r
 wait(...).poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
 ```
 
-The decorator variants are simply partial applications of the corresponding methods.
-Note decorator syntax doesn't support arbitrary expressions.
+The decorator variants are simply partial applications of the corresponding methods. Note decorator syntax doesn't support arbitrary expressions.
 
 ```python
 backoff = wait(0.1) * 2
@@ -93,20 +85,13 @@ But in the real world:
 * logging may be required
 * there may be complex handling of different exceptions or results
 
-So consider the block form, just as decorators don't render `with` blocks superfluous.
-Also note `wait` objects are re-iterable provided their original delays were.
+So consider the block form, just as decorators don't render `with` blocks superfluous. Also note `wait` objects are re-iterable provided their original delays were.
 
 ### async
-Waiters also support async iteration.
-`throttle` optionally accepts an async iterable.
-`repeat`, `retry`, and `poll` optionally accept coroutine functions.
+Waiters also support async iteration. `throttle` optionally accepts an async iterable. `repeat`, `retry`, and `poll` optionally accept coroutine functions.
 
 ### statistics
-Waiter objects have a `stats` attribute for aggregating statistics about the calls made.
-The base implementation provides `total` and `failure` counts.
-The interface of the `stats` object itself is considered provisional for now,
-but can be extended by overriding the `Stats` class attribute.
-This also allows customization of the iterable values; elapsed time is the default.
+Waiter objects have a `stats` attribute for aggregating statistics about the calls made. The base implementation provides `total` and `failure` counts. The interface of the `stats` object itself is considered provisional for now, but can be extended by overriding the `Stats` class attribute. This also allows customization of the iterable values; elapsed time is the default.
 
 ## Installation
 ```console

@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='waiter',
-    version='1.1',
+    version='1.2',
     description='Delayed iteration for polling and retries.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -15,7 +15,6 @@ setup(
     package_data={'waiter': ['py.typed']},
     zip_safe=False,
     install_requires=['multimethod>=1.0'],
-    extras_require={'docs': open('docs/requirements.txt').read().splitlines()},
     python_requires='>=3.6',
     tests_require=['pytest-cov'],
     keywords='wait retry poll delay sleep timeout incremental exponential backoff async',

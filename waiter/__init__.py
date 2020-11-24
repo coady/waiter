@@ -11,7 +11,7 @@ from functools import partial
 from typing import AsyncIterable, Callable, Iterable, Iterator, Sequence
 from multimethod import multimethod, overload  # type: ignore
 
-__version__ = '1.1'
+__version__ = '1.2'
 iscoro = asyncio.iscoroutinefunction
 
 

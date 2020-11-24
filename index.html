@@ -1,0 +1,626 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Delayed iteration for polling and retries.">
+      
+      
+      
+      
+      <link rel="shortcut icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.1.6">
+    
+    
+      
+        <title>waiter</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.6910b76c.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.196e0c26.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#usage" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="." title="waiter" class="md-header-nav__button md-logo" aria-label="waiter">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            waiter
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Introduction
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header-nav__source">
+        
+<a href="https://github.com/coady/waiter" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coady/waiter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="waiter" class="md-nav__button md-logo" aria-label="waiter">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    waiter
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/coady/waiter" title="Go to repository" class="md-source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 00-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 01-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 000 40.81l195.61 195.6a28.86 28.86 0 0040.8 0l194.69-194.69a28.86 28.86 0 000-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    coady/waiter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Introduction
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+    
+    <a href="." class="md-nav__link md-nav__link--active">
+      Introduction
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creation" class="md-nav__link">
+    creation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iteration" class="md-nav__link">
+    iteration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    async
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    statistics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    Dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    Tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changes" class="md-nav__link">
+    Changes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="reference/" class="md-nav__link">
+      Reference
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="examples/" class="md-nav__link">
+      Examples
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creation" class="md-nav__link">
+    creation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iteration" class="md-nav__link">
+    iteration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    functions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    async
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    statistics
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    Installation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    Dependencies
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    Tests
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changes" class="md-nav__link">
+    Changes
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  <h1>Introduction</h1>
+                
+                <p><a href="https://pypi.org/project/waiter/"><img alt="image" src="https://img.shields.io/pypi/v/waiter.svg" /></a>
+<img alt="image" src="https://img.shields.io/pypi/pyversions/waiter.svg" />
+<a href="https://pepy.tech/project/waiter"><img alt="image" src="https://pepy.tech/badge/waiter" /></a>
+<img alt="image" src="https://img.shields.io/pypi/status/waiter.svg" />
+<a href="https://github.com/coady/waiter/actions"><img alt="image" src="https://github.com/coady/waiter/workflows/build/badge.svg" /></a>
+<a href="https://codecov.io/gh/coady/waiter/"><img alt="image" src="https://codecov.io/gh/coady/waiter/branch/main/graph/badge.svg" /></a>
+<a href="https://github.com/coady/waiter/security/code-scanning"><img alt="image" src="https://github.com/coady/waiter/workflows/codeql/badge.svg" /></a>
+<a href="https://pypi.org/project/black/"><img alt="image" src="https://img.shields.io/badge/code%20style-black-000000.svg" /></a>
+<a href="http://mypy-lang.org/"><img alt="image" src="http://mypy-lang.org/static/mypy_badge.svg" /></a></p>
+<p>Does Python need yet another retry / poll library? It needs at least one that isn't coupled to decorators and functions. Decorators prevent the caller from customizing delay options, and organizing the code around functions hinders any custom handling of failures.</p>
+<p>Waiter is built around iteration instead, because the foundation of retrying / polling is a slowly executing loop. The resulting interface is both easier to use and more flexible, decoupling the delay algorithms from the application logic.</p>
+<h2 id="usage">Usage</h2>
+<h3 id="creation">creation</h3>
+<p>Supply a number of seconds to repeat endlessly, or any iterable of seconds.</p>
+<pre><code class="language-python">from waiter import wait
+
+wait(1)                 # 1, 1, 1, 1, ...
+wait([1] * 3)           # 1, 1, 1
+wait([0.5, 0.5, 60])    # circuit breaker
+</code></pre>
+<p>Iterable delays can express any waiting strategy, and constructors for common algorithms are also provided.</p>
+<pre><code class="language-python">wait.count(1)           # incremental backoff 1, 2, 3, 4, 5, ...
+wait(1) + 1             # alternate syntax 1, 2, 3, 4, 5, ...
+wait.fibonacci(1)       # 1, 1, 2, 3, 5, ...
+wait.polynomial(2)      # 0, 1, 4, 9, 16, ...
+
+wait.exponential(2)     # exponential backoff 1, 2, 4, 8, ...
+backoff = wait(1) * 2   # alternate syntax 1, 2, 4, 8, ...
+backoff[:3]             # limit attempt count 1, 2, 4
+backoff &lt;= 5            # set maximum delay   1, 2, 4, 5, 5, 5, ...
+backoff.random(-1, 1)   # add random jitter
+</code></pre>
+<h3 id="iteration">iteration</h3>
+<p>Then simply use the <code>wait</code> object like any iterable, yielding the amount of elapsed time. Timeouts also supported of course.</p>
+<pre><code class="language-python">from waiter import wait, suppress, first
+
+for elapsed in wait(delays):            # first iteration is immediate
+    with suppress(exception):           # then each subsequent iteration sleeps as necessary
+        ...
+        break
+
+for _ in wait(delays, timeout):         # standard convention for ignoring a loop variable
+    ...                                 # won't sleep past the timeout
+    if ...:
+        break
+
+results = (... for _ in wait(delays))   # expressions are even easier
+first(predicate, results[, default])    # filter for first true item
+assert any(results)                     # perfect for tests too
+</code></pre>
+<h3 id="functions">functions</h3>
+<p>Yes, functional versions are provided, as well as being trivial to implement.</p>
+<pre><code class="language-python">wait(...).throttle(iterable)                      # generate items from iterable
+wait(...).repeat(func, *args, **kwargs)           # generate successive results
+wait(...).retry(exception, func, *args, **kwargs) # return first success or re-raise exception
+wait(...).poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
+</code></pre>
+<p>The decorator variants are simply partial applications of the corresponding methods. Note decorator syntax doesn't support arbitrary expressions.</p>
+<pre><code class="language-python">backoff = wait(0.1) * 2
+@backoff.repeating
+@backoff.retrying(exception)
+@backoff.polling(predicate)
+</code></pre>
+<p>But in the real world:
+* the function may not exist or be succinctly written as a lambda
+* the predicate may not exist or be succinctly written as a lambda
+* logging may be required
+* there may be complex handling of different exceptions or results</p>
+<p>So consider the block form, just as decorators don't render <code>with</code> blocks superfluous. Also note <code>wait</code> objects are re-iterable provided their original delays were.</p>
+<h3 id="async">async</h3>
+<p>Waiters also support async iteration. <code>throttle</code> optionally accepts an async iterable. <code>repeat</code>, <code>retry</code>, and <code>poll</code> optionally accept coroutine functions.</p>
+<h3 id="statistics">statistics</h3>
+<p>Waiter objects have a <code>stats</code> attribute for aggregating statistics about the calls made. The base implementation provides <code>total</code> and <code>failure</code> counts. The interface of the <code>stats</code> object itself is considered provisional for now, but can be extended by overriding the <code>Stats</code> class attribute. This also allows customization of the iterable values; elapsed time is the default.</p>
+<h2 id="installation">Installation</h2>
+<pre><code class="language-console">% pip install waiter
+</code></pre>
+<h2 id="dependencies">Dependencies</h2>
+<ul>
+<li>multimethod</li>
+</ul>
+<h2 id="tests">Tests</h2>
+<p>100% branch coverage.</p>
+<pre><code class="language-console">% pytest [--cov]
+</code></pre>
+<h2 id="changes">Changes</h2>
+<p>1.2</p>
+<ul>
+<li>Python &gt;=3.6 required</li>
+</ul>
+<p>1.1</p>
+<ul>
+<li>Stream from sized groups</li>
+</ul>
+<p>1.0</p>
+<ul>
+<li>Map a function across an iterable in batches</li>
+</ul>
+<p>0.6</p>
+<ul>
+<li>Extensible iterable values and statistics</li>
+<li>Additional constructors: fibonacci, polynomial, accumulate</li>
+</ul>
+<p>0.5</p>
+<ul>
+<li>Asynchronous iteration</li>
+</ul>
+<p>0.4</p>
+<ul>
+<li>Decorators support methods</li>
+<li>Iterables can be throttled</li>
+</ul>
+<p>0.3</p>
+<ul>
+<li>Waiters behave as iterables instead of iterators</li>
+<li>Support for function decorators</li>
+</ul>
+<p>0.2</p>
+<ul>
+<li><code>suppress</code> context manager for exception handling</li>
+<li><code>repeat</code> method for decoupled iteration</li>
+<li><code>first</code> function for convenient filtering</li>
+</ul>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+        
+          <a href="reference/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Reference
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="assets/javascripts/vendor.fd16492e.min.js"></script>
+      <script src="assets/javascripts/bundle.7836ba4d.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}</script>
+      
+      <script>
+        app = initialize({
+          base: ".",
+          features: [],
+          search: Object.assign({
+            worker: "assets/javascripts/worker/search.4ac00218.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

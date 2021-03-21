@@ -1,5 +1,5 @@
 check:
-	pytest --cov
+	python3 -m pytest --cov
 
 lint:
 	python3 setup.py check -ms
@@ -8,4 +8,4 @@ lint:
 	mypy -p waiter
 
 html:
-	PYTHONPATH=$(PWD):$(PYTHONPATH) mkdocs build
+	PYTHONPATH=$(PWD) python3 -m mkdocs build

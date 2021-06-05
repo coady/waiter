@@ -9,7 +9,7 @@ import time
 import types
 from functools import partial
 from typing import AsyncIterable, Callable, Iterable, Iterator, Sequence
-from multimethod import multimethod, overload  # type: ignore
+from multimethod import multimethod, overload
 
 __version__ = '1.2'
 iscoro = asyncio.iscoroutinefunction
@@ -221,9 +221,9 @@ class waiter:
         return (func(*args, **kwargs) for _ in self)
 
     @overload
-    async def repeat(self, func: iscoro, *args, **kwargs):  # type: ignore
+    async def repeat(self, func: iscoro, *args, **kwargs):
         async for _ in self:
-            yield await func(*args, **kwargs)  # type: ignore
+            yield await func(*args, **kwargs)
 
     @overload
     def retry(self, exception, func, *args, **kwargs):
@@ -234,10 +234,10 @@ class waiter:
         raise excs[0]
 
     @overload
-    async def retry(self, exception, func: iscoro, *args, **kwargs):  # type: ignore
+    async def retry(self, exception, func: iscoro, *args, **kwargs):
         async for _ in self:
             with suppress(exception) as excs:
-                return await func(*args, **kwargs)  # type: ignore
+                return await func(*args, **kwargs)
         raise excs[0]
 
     @overload
@@ -246,7 +246,7 @@ class waiter:
         return first(predicate, self.repeat(func, *args, **kwargs))
 
     @overload
-    async def poll(self, predicate, func: iscoro, *args, **kwargs):  # type: ignore
+    async def poll(self, predicate, func: iscoro, *args, **kwargs):
         async for result in self.repeat(func, *args, **kwargs):
             if predicate(result):
                 return result

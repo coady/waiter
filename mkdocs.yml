@@ -1,4 +1,5 @@
 site_name: waiter
+site_url: https://coady.github.io/waiter/
 site_description: Delayed iteration for polling and retries.
 theme: material
 

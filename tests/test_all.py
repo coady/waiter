@@ -124,7 +124,7 @@ def test_stats():
 
 
 def test_async():
-    run = asyncio.get_event_loop().run_until_complete
+    run = asyncio.new_event_loop().run_until_complete
 
     ws = wait([]), wait(0)
     for ait in (ws[0].throttle(ws[1]), ws[1].throttle(ws[0])):

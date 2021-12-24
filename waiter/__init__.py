@@ -248,7 +248,7 @@ class waiter:
     @overload
     async def poll(self, predicate, func: iscoro, *args, **kwargs):
         async for result in self.repeat(func, *args, **kwargs):
-            if predicate(result):
+            if predicate(result):  # pragma: no branch
                 return result
         raise StopAsyncIteration
 

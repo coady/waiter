@@ -1,4 +1,4 @@
-::: waiter.wait
+::: waiter.waiter
 
 ::: waiter.suppress
 

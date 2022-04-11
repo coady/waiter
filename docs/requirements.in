@@ -1,6 +1,6 @@
 multimethod
 mkdocs-material
-mkdocstrings
+mkdocstrings[python]
 mkdocs-jupyter
 ipykernel
 httpx

@@ -53,18 +53,18 @@ class partialmethod(partial):
 class Stats(collections.Counter):
     """Mapping of attempt counts."""
 
-    def add(self, attempt, elapsed):
+    def add(self, attempt: int, elapsed: float) -> float:
         """Record attempt and return next value."""
         self[attempt] += 1
         return elapsed
 
     @property
-    def total(self):
+    def total(self) -> float:
         """total number of attempts"""
         return sum(self.values())
 
     @property
-    def failures(self):
+    def failures(self) -> float:
         """number of repeat attempts"""
         return self.total - self[0]
 
@@ -79,11 +79,11 @@ def grouped(queue, size=None):
 
 
 class waiter:
-    """An iterable which sleeps for given delays.
+    """An iterable which sleeps for given delays. Aliased as `wait`.
 
     Args:
-        delays: any iterable of seconds, or a scalar which is repeated endlessly
-        timeout: optional timeout for iteration
+        delays iterable | number: any iterable of seconds, or a scalar which is repeated endlessly
+        timeout number: optional timeout for iteration
     """
 
     Stats = Stats
@@ -117,7 +117,7 @@ class waiter:
             await asyncio.sleep(min(delay, remaining))
             yield self.stats.add(attempt, time.time() - start)
 
-    def clone(self, func, *args):
+    def clone(self, func: Callable, *args) -> 'waiter':
         return type(self)(reiter(func, *args), self.timeout)
 
     def map(self, func: Callable, *iterables: Iterable) -> 'waiter':
@@ -174,7 +174,7 @@ class waiter:
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
     @multimethod
-    def throttle(self, iterable):
+    def throttle(self, iterable) -> Iterator:
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
 
@@ -185,7 +185,7 @@ class waiter:
             async for _ in self:
                 yield await anext()
 
-    def stream(self, queue: Sequence, size: int = None) -> Iterator:
+    def stream(self, queue: Iterable, size: int = None) -> Iterator:
         """Generate chained values in groups from an iterable.
 
         The queue can be extended while in use.
@@ -253,15 +253,15 @@ class waiter:
         raise StopAsyncIteration
 
     def repeating(self, func: Callable):
-        """A decorator for [repeat][waiter.wait.repeat]."""
+        """A decorator for `repeat`."""
         return partialmethod(self.repeat, func)
 
     def retrying(self, exception: Exception):
-        """Return a decorator for [retry][waiter.wait.retry]."""
+        """Return a decorator for `retry`."""
         return partial(partialmethod, self.retry, exception)
 
     def polling(self, predicate: Callable):
-        """Return a decorator for [poll][waiter.wait.poll]."""
+        """Return a decorator for `poll`."""
         return partial(partialmethod, self.poll, predicate)
 
 

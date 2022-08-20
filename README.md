@@ -110,33 +110,42 @@ Waiter objects have a `stats` attribute for aggregating statistics about the cal
 
 ## Changes
 dev
+
 * Python >=3.7 required
 
 1.2
+
 * Python >=3.6 required
 
 1.1
+
 * Stream from sized groups
 
 1.0
+
 * Map a function across an iterable in batches
 
 0.6
+
 * Extensible iterable values and statistics
 * Additional constructors: fibonacci, polynomial, accumulate
 
 0.5
+
 * Asynchronous iteration
 
 0.4
+
 * Decorators support methods
 * Iterables can be throttled
 
 0.3
+
 * Waiters behave as iterables instead of iterators
 * Support for function decorators
 
 0.2
+
 * `suppress` context manager for exception handling
 * `repeat` method for decoupled iteration
 * `first` function for convenient filtering

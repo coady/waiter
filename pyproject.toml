@@ -1,7 +1,49 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "waiter"
+dynamic = ["version"]
+description = "Delayed iteration for polling and retries."
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE.txt"}
+authors = [{name = "Aric Coady", email = "aric.coady@gmail.com"}]
+keywords = ["wait", "retry", "poll", "delay", "sleep", "timeout", "incremental", "exponential", "backoff", "async"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = ["multimethod>=1"]
+
+[project.urls]
+Homepage = "https://github.com/coady/waiter"
+Documentation = "https://coady.github.io/waiter"
+
+[tool.setuptools]
+packages = ["waiter"]
+
+[tool.setuptools.dynamic]
+version = {attr = "waiter.__version__"}
+
+[tool.setuptools.package-data]
+waiter = ["py.typed"]
 
 [tool.black]
 line-length = 100
 skip-string-normalization = true
+
+[tool.coverage.run]
+source = ["waiter"]
+branch = true

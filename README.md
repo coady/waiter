@@ -109,7 +109,7 @@ Waiter objects have a `stats` attribute for aggregating statistics about the cal
 ```
 
 ## Changes
-dev
+1.3
 
 * Python >=3.7 required
 

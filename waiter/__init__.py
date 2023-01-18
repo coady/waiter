@@ -1,4 +1,4 @@
-# type: ignore[no-redef]
+# mypy: disable-error-code="no-redef,valid-type"
 import asyncio
 import collections
 import contextlib
@@ -8,7 +8,7 @@ import random
 import time
 import types
 from functools import partial
-from typing import AsyncIterable, Callable, Iterable, Iterator, Sequence
+from typing import AsyncIterable, Callable, Iterable, Iterator, Optional, Sequence
 from multimethod import multimethod, overload
 
 __version__ = '1.3'
@@ -25,10 +25,10 @@ def fibonacci(x, y):
 @contextlib.contextmanager
 def suppress(*exceptions: Exception):
     """Variant of `contextlib.suppress`, which also records exception."""
-    excs = []
+    excs: list = []
     try:
         yield excs
-    except exceptions as exc:
+    except exceptions as exc:  # type: ignore
         excs.append(exc)
 
 
@@ -59,7 +59,7 @@ class Stats(collections.Counter):
         return elapsed
 
     @property
-    def total(self) -> float:
+    def total(self) -> float:  # type: ignore
         """total number of attempts"""
         return sum(self.values())
 
@@ -185,7 +185,7 @@ class waiter:
             async for _ in self:
                 yield await anext()
 
-    def stream(self, queue: Iterable, size: int = None) -> Iterator:
+    def stream(self, queue: Iterable, size: Optional[int] = None) -> Iterator:
         """Generate chained values in groups from an iterable.
 
         The queue can be extended while in use.

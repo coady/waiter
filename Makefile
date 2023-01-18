@@ -3,7 +3,7 @@ check:
 
 lint:
 	black --check .
-	flake8 --exclude .venv --ignore E203,E501,F811
+	flake8 --ignore E203,E501,F811 waiter tests
 	mypy -p waiter
 
 html:

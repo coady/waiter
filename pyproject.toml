@@ -43,6 +43,10 @@ waiter = ["py.typed"]
 line-length = 100
 skip-string-normalization = true
 
+[[tool.mypy.overrides]]
+module = ["multimethod"]
+ignore_missing_imports = true
+
 [tool.coverage.run]
 source = ["waiter"]
 branch = true

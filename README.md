@@ -6,7 +6,7 @@
 [![image](https://codecov.io/gh/coady/waiter/branch/main/graph/badge.svg)](https://codecov.io/gh/coady/waiter/)
 [![image](https://github.com/coady/waiter/workflows/codeql/badge.svg)](https://github.com/coady/waiter/security/code-scanning)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
-[![image](http://mypy-lang.org/static/mypy_badge.svg)](http://mypy-lang.org/)
+[![image](https://mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
 Does Python need yet another retry / poll library? It needs at least one that isn't coupled to decorators and functions. Decorators prevent the caller from customizing delay options, and organizing the code around functions hinders any custom handling of failures.
 
@@ -107,49 +107,3 @@ Waiter objects have a `stats` attribute for aggregating statistics about the cal
 ```console
 % pytest [--cov]
 ```
-
-## Changes
-dev
-
-* Python >=3.8 required
-
-1.3
-
-* Python >=3.7 required
-
-1.2
-
-* Python >=3.6 required
-
-1.1
-
-* Stream from sized groups
-
-1.0
-
-* Map a function across an iterable in batches
-
-0.6
-
-* Extensible iterable values and statistics
-* Additional constructors: fibonacci, polynomial, accumulate
-
-0.5
-
-* Asynchronous iteration
-
-0.4
-
-* Decorators support methods
-* Iterables can be throttled
-
-0.3
-
-* Waiters behave as iterables instead of iterators
-* Support for function decorators
-
-0.2
-
-* `suppress` context manager for exception handling
-* `repeat` method for decoupled iteration
-* `first` function for convenient filtering

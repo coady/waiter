@@ -6,6 +6,7 @@
 [![image](https://codecov.io/gh/coady/waiter/branch/main/graph/badge.svg)](https://codecov.io/gh/coady/waiter/)
 [![image](https://github.com/coady/waiter/workflows/codeql/badge.svg)](https://github.com/coady/waiter/security/code-scanning)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://pypi.org/project/black/)
+[![image](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![image](https://mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
 Does Python need yet another retry / poll library? It needs at least one that isn't coupled to decorators and functions. Decorators prevent the caller from customizing delay options, and organizing the code around functions hinders any custom handling of failures.

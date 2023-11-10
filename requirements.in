@@ -1,0 +1,4 @@
+multimethod
+mkdocstrings[python]
+mkdocs-jupyter
+httpx

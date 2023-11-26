@@ -7,9 +7,9 @@ import operator
 import random
 import time
 import types
-from collections.abc import AsyncIterable, Callable, Iterable, Sequence
+from collections.abc import AsyncIterable, Callable, Iterable, Iterator, Sequence
 from functools import partial
-from typing import Iterator, Optional
+from typing import Optional
 from multimethod import multimethod, overload
 
 __version__ = '1.4'

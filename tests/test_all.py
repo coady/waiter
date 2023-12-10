@@ -116,11 +116,7 @@ def test_stats():
     w = wait([0] * 2)
     for index, elapsed in enumerate(w):
         assert elapsed >= 0.0
-        assert w.stats.total == w.stats.failures + 1
-    assert w.stats == dict.fromkeys(range(3), 1)
-    assert next(iter(w)) == 0.0
-    assert w.stats.total == 4
-    assert w.stats.failures == 2
+        assert w.stats[index] == 1
 
 
 def test_async():
@@ -132,10 +128,8 @@ def test_async():
         assert run(anext()) == 0.0
         with pytest.raises(StopAsyncIteration):
             run(anext())
-    assert ws[0].stats.total == 2
-    assert ws[0].stats.failures == 0
-    assert ws[1].stats.total == 3
-    assert ws[1].stats.failures == 1
+    assert ws[0].stats == {0: 2}
+    assert ws[1].stats == {0: 2, 1: 1}
 
     anext = wait([0.1, 0.1], timeout=0.1).__aiter__().__anext__
     assert run(anext()) == 0.0

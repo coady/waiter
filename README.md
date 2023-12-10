@@ -70,7 +70,7 @@ wait(...).retry(exception, func, *args, **kwargs) # return first success or re-r
 wait(...).poll(predicate, func, *args, **kwargs)  # return first success or raise StopIteration
 ```
 
-The decorator variants are simply partial applications of the corresponding methods. Note decorator syntax doesn't support arbitrary expressions.
+The decorator variants are partial applications of the corresponding methods.
 
 ```python
 backoff = wait(0.1) * 2
@@ -91,7 +91,7 @@ So consider the block form, just as decorators don't render `with` blocks superf
 Waiters also support async iteration. `throttle` optionally accepts an async iterable. `repeat`, `retry`, and `poll` optionally accept coroutine functions.
 
 ### statistics
-Waiter objects have a `stats` attribute for aggregating statistics about the calls made. The base implementation provides `total` and `failure` counts. The interface of the `stats` object itself is considered provisional for now, but can be extended by overriding the `Stats` class attribute. This also allows customization of the iterable values; elapsed time is the default.
+Waiter objects have a `stats` attribute for aggregating statistics about the calls made. The base implementation is an attempt counter. The interface of the `stats` object itself is considered provisional, but can be extended by overriding the `Stats` class attribute. The `add` method also allows customization of the iterable values; elapsed time is the default.
 
 ## Installation
 ```console

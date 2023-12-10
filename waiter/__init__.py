@@ -59,16 +59,6 @@ class Stats(collections.Counter):
         self[attempt] += 1
         return elapsed
 
-    @property
-    def total(self) -> float:  # type: ignore
-        """total number of attempts"""
-        return sum(self.values())
-
-    @property
-    def failures(self) -> float:
-        """number of repeat attempts"""
-        return self.total - self[0]
-
 
 def grouped(queue, size=None):
     """Generate slices from a sequence without relying on a fixed `len`."""

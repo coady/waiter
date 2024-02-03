@@ -98,9 +98,6 @@ Waiter objects have a `stats` attribute for aggregating statistics about the cal
 % pip install waiter
 ```
 
-## Dependencies
-* multimethod
-
 ## Tests
 100% branch coverage.
 

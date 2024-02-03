@@ -1,4 +1,3 @@
-# mypy: disable-error-code="no-redef,valid-type"
 import asyncio
 import collections
 import contextlib
@@ -7,13 +6,11 @@ import operator
 import random
 import time
 import types
-from collections.abc import AsyncIterable, Callable, Iterable, Iterator, Sequence
-from functools import partial
+from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator, Sequence
+from functools import partial, singledispatchmethod
 from typing import Optional
-from multimethod import multimethod, overload
 
 __version__ = '1.4'
-iscoro = asyncio.iscoroutinefunction
 
 
 def fibonacci(x, y):
@@ -164,15 +161,15 @@ class waiter:
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
-    @multimethod
-    def throttle(self, iterable) -> Iterator:
+    @singledispatchmethod
+    def throttle(self, iterable: Iterable):
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
 
-    @multimethod
-    async def throttle(self, iterable: AsyncIterable):
+    @throttle.register
+    async def _(self, iterable: AsyncIterable) -> AsyncIterator:
         anext = iterable.__aiter__().__anext__
-        with suppress(StopAsyncIteration):
+        with suppress(StopAsyncIteration):  # type: ignore
             async for _ in self:
                 yield await anext()
 
@@ -206,38 +203,38 @@ class waiter:
             else:
                 queue.append(arg)
 
-    @overload
-    def repeat(self, func, *args, **kwargs):
+    def repeat(self, func: Callable, *args, **kwargs):
         """Repeat function call."""
+        if asyncio.iscoroutinefunction(func):
+            return self.arepeat(func, *args, **kwargs)
         return (func(*args, **kwargs) for _ in self)
 
-    @overload
-    async def repeat(self, func: iscoro, *args, **kwargs):
+    async def arepeat(self, func: Callable, *args, **kwargs) -> AsyncIterator:
         async for _ in self:
             yield await func(*args, **kwargs)
 
-    @overload
-    def retry(self, exception, func, *args, **kwargs):
+    def retry(self, exception: Exception, func: Callable, *args, **kwargs):
         """Repeat function call until exception isn't raised."""
+        if asyncio.iscoroutinefunction(func):
+            return self.aretry(exception, func, *args, **kwargs)
         for _ in self:
             with suppress(exception) as excs:
                 return func(*args, **kwargs)
         raise excs[0]
 
-    @overload
-    async def retry(self, exception, func: iscoro, *args, **kwargs):
+    async def aretry(self, exception: Exception, func: Callable, *args, **kwargs):
         async for _ in self:
             with suppress(exception) as excs:
                 return await func(*args, **kwargs)
         raise excs[0]
 
-    @overload
-    def poll(self, predicate, func, *args, **kwargs):
+    def poll(self, predicate: Callable, func: Callable, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
+        if asyncio.iscoroutinefunction(func):
+            return self.apoll(predicate, func, *args, **kwargs)
         return first(predicate, self.repeat(func, *args, **kwargs))
 
-    @overload
-    async def poll(self, predicate, func: iscoro, *args, **kwargs):
+    async def apoll(self, predicate: Callable, func: Callable, *args, **kwargs):
         async for result in self.repeat(func, *args, **kwargs):
             if predicate(result):  # pragma: no branch
                 return result

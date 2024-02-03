@@ -25,7 +25,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
-dependencies = ["multimethod>=1"]
 
 [project.urls]
 Homepage = "https://github.com/coady/waiter"
@@ -48,14 +47,6 @@ extend-include = ["*.ipynb"]
 
 [tool.ruff.format]
 quote-style = "single"
-
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F811"]
-"*.ipynb" = ["E402"]
-
-[[tool.mypy.overrides]]
-module = ["multimethod"]
-ignore_missing_imports = true
 
 [tool.coverage.run]
 source = ["waiter"]

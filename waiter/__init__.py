@@ -59,11 +59,10 @@ class Stats(collections.Counter):
 
 def grouped(queue, size=None):
     """Generate slices from a sequence without relying on a fixed `len`."""
-    group, start = queue[:size], 0
-    while group:
+    start = 0
+    while group := queue[start : size and start + size]:
         start += len(group)
         yield group
-        group = queue[start : size and start + size]
 
 
 class waiter:

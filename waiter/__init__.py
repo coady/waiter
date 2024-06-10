@@ -10,8 +10,6 @@ from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, It
 from functools import partial, singledispatchmethod
 from typing import Optional
 
-__version__ = '1.4'
-
 
 def fibonacci(x, y):
     """Generate fibonacci sequence."""

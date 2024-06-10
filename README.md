@@ -2,9 +2,9 @@
 ![image](https://img.shields.io/pypi/pyversions/waiter.svg)
 [![image](https://pepy.tech/badge/waiter)](https://pepy.tech/project/waiter)
 ![image](https://img.shields.io/pypi/status/waiter.svg)
-[![image](https://github.com/coady/waiter/workflows/build/badge.svg)](https://github.com/coady/waiter/actions)
+[![build](https://github.com/coady/waiter/actions/workflows/build.yml/badge.svg)](https://github.com/coady/waiter/actions/workflows/build.yml)
 [![image](https://codecov.io/gh/coady/waiter/branch/main/graph/badge.svg)](https://codecov.io/gh/coady/waiter/)
-[![image](https://github.com/coady/waiter/workflows/codeql/badge.svg)](https://github.com/coady/waiter/security/code-scanning)
+[![CodeQL](https://github.com/coady/waiter/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/coady/waiter/actions/workflows/github-code-scanning/codeql)
 [![image](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![image](https://mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 

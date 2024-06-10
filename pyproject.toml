@@ -1,10 +1,6 @@
-[build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "waiter"
-dynamic = ["version"]
+version = "1.4"
 description = "Delayed iteration for polling and retries."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -31,15 +27,6 @@ Homepage = "https://github.com/coady/waiter"
 Documentation = "https://coady.github.io/waiter"
 Changelog = "https://github.com/coady/waiter/blob/main/CHANGELOG.md"
 Issues = "https://github.com/coady/waiter/issues"
-
-[tool.setuptools]
-packages = ["waiter"]
-
-[tool.setuptools.dynamic]
-version = {attr = "waiter.__version__"}
-
-[tool.setuptools.package-data]
-waiter = ["py.typed"]
 
 [tool.ruff]
 line-length = 100

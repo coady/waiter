@@ -1,6 +1,7 @@
 import asyncio
 import collections
 import contextlib
+import inspect
 import itertools
 import operator
 import random
@@ -8,7 +9,6 @@ import time
 import types
 from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator, Sequence
 from functools import partial, singledispatchmethod
-from typing import Optional
 
 
 def fibonacci(x, y):
@@ -170,7 +170,7 @@ class waiter:
             async for _ in self:
                 yield await anext()
 
-    def stream(self, queue: Iterable, size: Optional[int] = None) -> Iterator:
+    def stream(self, queue: Iterable, size: int | None = None) -> Iterator:
         """Generate chained values in groups from an iterable.
 
         The queue can be extended while in use.
@@ -202,7 +202,7 @@ class waiter:
 
     def repeat(self, func: Callable, *args, **kwargs):
         """Repeat function call."""
-        if asyncio.iscoroutinefunction(func):
+        if inspect.iscoroutinefunction(func):
             return self.arepeat(func, *args, **kwargs)
         return (func(*args, **kwargs) for _ in self)
 
@@ -212,7 +212,7 @@ class waiter:
 
     def retry(self, exception: Exception, func: Callable, *args, **kwargs):
         """Repeat function call until exception isn't raised."""
-        if asyncio.iscoroutinefunction(func):
+        if inspect.iscoroutinefunction(func):
             return self.aretry(exception, func, *args, **kwargs)
         for _ in self:
             with suppress(exception) as excs:
@@ -227,7 +227,7 @@ class waiter:
 
     def poll(self, predicate: Callable, func: Callable, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
-        if asyncio.iscoroutinefunction(func):
+        if inspect.iscoroutinefunction(func):
             return self.apoll(predicate, func, *args, **kwargs)
         return first(predicate, self.repeat(func, *args, **kwargs))
 

@@ -4,13 +4,12 @@ version = "1.5"
 description = "Delayed iteration for polling and retries."
 readme = "README.md"
 requires-python = ">=3.10"
-license = {file = "LICENSE.txt"}
+license = "Apache-2.0"
 authors = [{name = "Aric Coady", email = "aric.coady@gmail.com"}]
 keywords = ["wait", "retry", "poll", "delay", "sleep", "timeout", "incremental", "exponential", "backoff", "async"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -37,3 +36,13 @@ quote-style = "single"
 [tool.coverage.run]
 source = ["waiter"]
 branch = true
+
+[dependency-groups]
+dev = [
+    "pytest-cov",
+    "ruff",
+    "mypy",
+    "mkdocstrings[python]",
+    "mkdocs-jupyter",
+    "httpx",
+]

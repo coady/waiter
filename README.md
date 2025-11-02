@@ -95,12 +95,12 @@ Waiter objects have a `stats` attribute for aggregating statistics about the cal
 
 ## Installation
 ```console
-% pip install waiter
+pip install waiter
 ```
 
 ## Tests
 100% branch coverage.
 
 ```console
-% pytest [--cov]
+pytest [--cov]
 ```

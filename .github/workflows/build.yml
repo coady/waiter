@@ -18,6 +18,8 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: astral-sh/setup-uv@v7
+      with:
+        python-version: ${{ matrix.python-version }}
     - run: make check
     - run: uv run coverage xml
     - uses: codecov/codecov-action@v5

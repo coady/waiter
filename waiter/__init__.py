@@ -166,7 +166,7 @@ class waiter:
     @throttle.register
     async def _(self, iterable: AsyncIterable) -> AsyncIterator:
         anext = iterable.__aiter__().__anext__
-        with suppress(StopAsyncIteration):  # type: ignore
+        with suppress(StopAsyncIteration):
             async for _ in self:
                 yield await anext()
 
@@ -217,13 +217,13 @@ class waiter:
         for _ in self:
             with suppress(exception) as excs:
                 return func(*args, **kwargs)
-        raise excs[0]
+        raise excs[0]  # type: ignore
 
     async def aretry(self, exception: Exception, func: Callable, *args, **kwargs):
         async for _ in self:
             with suppress(exception) as excs:
                 return await func(*args, **kwargs)
-        raise excs[0]
+        raise excs[0]  # type: ignore
 
     def poll(self, predicate: Callable, func: Callable, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""

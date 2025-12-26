@@ -9,6 +9,7 @@ import time
 import types
 from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator, Sequence
 from functools import partial, singledispatchmethod
+from typing import Self
 
 
 def fibonacci(x, y):
@@ -102,59 +103,59 @@ class waiter:
             await asyncio.sleep(min(delay, remaining))
             yield self.stats.add(attempt, time.time() - start)
 
-    def clone(self, func: Callable, *args) -> 'waiter':
+    def clone(self, func: Callable, *args) -> Self:
         return type(self)(reiter(func, *args), self.timeout)
 
-    def map(self, func: Callable, *iterables: Iterable) -> 'waiter':
+    def map(self, func: Callable, *iterables: Iterable) -> Self:
         """Return new waiter with function mapped across delays."""
         return self.clone(map, func, self.delays, *iterables)
 
     @classmethod
-    def fibonacci(cls, delay, **kwargs) -> 'waiter':
+    def fibonacci(cls, delay, **kwargs) -> Self:
         """Create waiter with fibonacci backoff."""
         return cls(reiter(fibonacci, delay, delay), **kwargs)
 
     @classmethod
-    def count(cls, *args, **kwargs) -> 'waiter':
+    def count(cls, *args, **kwargs) -> Self:
         """Create waiter based on `itertools.count`."""
         return cls(reiter(itertools.count, *args), **kwargs)
 
     @classmethod
-    def accumulate(cls, *args, **kwargs) -> 'waiter':
+    def accumulate(cls, *args, **kwargs) -> Self:
         """Create waiter based on `itertools.accumulate`."""
         return cls(reiter(itertools.accumulate, *args), **kwargs)
 
     @classmethod
-    def exponential(cls, base, **kwargs) -> 'waiter':
+    def exponential(cls, base, **kwargs) -> Self:
         """Create waiter with exponential backoff."""
         return cls.count(**kwargs).map(base.__pow__)
 
     @classmethod
-    def polynomial(cls, exp, **kwargs) -> 'waiter':
+    def polynomial(cls, exp, **kwargs) -> Self:
         """Create waiter with polynomial backoff."""
         return cls.count(**kwargs).map(exp.__rpow__)
 
-    def __getitem__(self, slc: slice) -> 'waiter':
+    def __getitem__(self, slc: slice) -> Self:
         """Slice delays, e.g., to limit attempt count."""
         return self.clone(itertools.islice, self.delays, slc.start, slc.stop, slc.step)
 
-    def __le__(self, ceiling) -> 'waiter':
+    def __le__(self, ceiling) -> Self:
         """Limit maximum delay generated."""
         return self.map(partial(min, ceiling))
 
-    def __ge__(self, floor) -> 'waiter':
+    def __ge__(self, floor) -> Self:
         """Limit minimum delay generated."""
         return self.map(partial(max, floor))
 
-    def __add__(self, step) -> 'waiter':
+    def __add__(self, step) -> Self:
         """Generate incremental backoff."""
         return self.map(operator.add, reiter(itertools.count, 0, step))
 
-    def __mul__(self, factor) -> 'waiter':
+    def __mul__(self, factor) -> Self:
         """Generate exponential backoff."""
         return self.map(operator.mul, reiter(map, factor.__pow__, reiter(itertools.count)))
 
-    def random(self, start, stop) -> 'waiter':
+    def random(self, start, stop) -> Self:
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 

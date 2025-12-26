@@ -3,7 +3,7 @@ name = "waiter"
 version = "1.5.1"
 description = "Delayed iteration for polling and retries."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "Apache-2.0"
 authors = [{name = "Aric Coady", email = "aric.coady@gmail.com"}]
 keywords = ["wait", "retry", "poll", "delay", "sleep", "timeout", "incremental", "exponential", "backoff", "async"]
@@ -12,11 +12,11 @@ classifiers = [
     "Intended Audience :: Developers",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
@@ -42,4 +42,4 @@ branch = true
 
 [dependency-groups]
 dev = ["pytest-cov"]
-docs = ["mkdocstrings[python]", "mkdocs-jupyter","httpx"]
+docs = ["mkdocstrings[python]", "mkdocs-jupyter", "httpx"]

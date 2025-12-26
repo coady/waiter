@@ -1,13 +1,15 @@
 import asyncio
 import itertools
+
 import pytest
-from waiter import wait, first
+
+from waiter import first, wait
 
 
 def test_constructors():
     w = wait([1] * 3)
     assert w.delays == [1, 1, 1]
-    assert w.timeout == float('inf')
+    assert w.timeout == float("inf")
 
     w = wait(1, timeout=10)
     assert next(w.delays) == 1
@@ -24,7 +26,7 @@ def test_constructors():
 
     assert list(wait.fibonacci(1)[:5].delays) == [1, 1, 2, 3, 5]
     assert list(wait.count(1)[:5].delays) == [1, 2, 3, 4, 5]
-    if hasattr(itertools, 'accumulate'):
+    if hasattr(itertools, "accumulate"):
         assert list(wait.accumulate(range(5)).delays) == [0, 1, 3, 6, 10]
     assert list(wait.exponential(2)[:5].delays) == [1, 2, 4, 8, 16]
     assert list(wait.polynomial(2)[:5].delays) == [0, 1, 4, 9, 16]
@@ -32,37 +34,37 @@ def test_constructors():
 
 def test_iteration():
     w = wait([0] * 2)
-    assert ''.join(w.throttle('ab')) == 'ab'
+    assert "".join(w.throttle("ab")) == "ab"
 
-    it = iter('abcde')
+    it = iter("abcde")
     throttled = w.throttle(it)
-    assert next(it) == 'a'
-    assert ''.join(throttled) == 'bcd'
-    assert next(it) == 'e'
+    assert next(it) == "a"
+    assert "".join(throttled) == "bcd"
+    assert next(it) == "e"
 
-    assert ''.join(w.stream('abc')) == 'abc'
-    assert ''.join(w.stream('abc', 2)) == 'abc'
-    assert ''.join(w.stream(iter('abc'), 2)) == 'abc'
-    seq = ['a']
+    assert "".join(w.stream("abc")) == "abc"
+    assert "".join(w.stream("abc", 2)) == "abc"
+    assert "".join(w.stream(iter("abc"), 2)) == "abc"
+    seq = ["a"]
     it = w.stream(seq)
-    assert next(it) == 'a'
-    seq.append('b')
-    assert list(it) == ['b']
-    assert list(w.suppressed(ValueError, int, 'a0')) == [('0', 0)]
-    assert list(w.filtered(str.isalpha, str.upper, iter('0a'))) == [('a', 'A')]
+    assert next(it) == "a"
+    seq.append("b")
+    assert list(it) == ["b"]
+    assert list(w.suppressed(ValueError, int, "a0")) == [("0", 0)]
+    assert list(w.filtered(str.isalpha, str.upper, iter("0a"))) == [("a", "A")]
 
 
 def test_functional():
     w = wait([0] * 2)
-    assert w.retry(ValueError, lambda it: int(next(it)), iter('ab0')) == 0
+    assert w.retry(ValueError, lambda it: int(next(it)), iter("ab0")) == 0
     with pytest.raises(ValueError):
-        w.retry(ValueError, lambda it: int(next(it)), iter('abc'))
+        w.retry(ValueError, lambda it: int(next(it)), iter("abc"))
 
-    assert w.poll(str.islower, next, iter('ABc')) == 'c'
+    assert w.poll(str.islower, next, iter("ABc")) == "c"
     with pytest.raises(StopIteration):
-        assert w.poll(str.islower, next, iter('ABC'))
+        assert w.poll(str.islower, next, iter("ABC"))
 
-    assert first(str.islower, w.repeat(next, iter('ABC')), None) is None
+    assert first(str.islower, w.repeat(next, iter("ABC")), None) is None
     assert list(wait(1, timeout=-1)) == [0.0]
 
 
@@ -79,19 +81,19 @@ def test_decorators():
     def func(x):
         return x
 
-    assert ''.join(func('x')) == 'xxx'
+    assert "".join(func("x")) == "xxx"
 
     @w.retrying(ValueError)
     def func(it):
         return int(next(it))
 
-    assert func(iter('ab0')) == 0
+    assert func(iter("ab0")) == 0
 
     @w.polling(str.islower)
     def func(it):
         return next(it)
 
-    assert func(iter('ABc')) == 'c'
+    assert func(iter("ABc")) == "c"
 
     class cls:
         @w.repeating

@@ -75,9 +75,11 @@ class waiter:
     Stats = Stats
 
     def __init__(self, delays, timeout=float("inf")):
-        with suppress(TypeError) as excs:
-            iter(delays)
-        self.delays = itertools.repeat(delays) if excs else delays
+        self.delays = delays
+        try:
+            iter(delays)  # custom types with `__getitem__` fail is `Iterable`
+        except TypeError:
+            self.delays = itertools.repeat(delays)
         self.timeout = timeout
         self.stats = self.Stats()
 
@@ -167,7 +169,7 @@ class waiter:
     @throttle.register
     async def _(self, iterable: AsyncIterable) -> AsyncIterator:
         anext = iterable.__aiter__().__anext__
-        with suppress(StopAsyncIteration):
+        with contextlib.suppress(StopAsyncIteration):
             async for _ in self:
                 yield await anext()
 

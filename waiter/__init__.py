@@ -1,6 +1,7 @@
 import asyncio
 import collections
 import contextlib
+import functools
 import inspect
 import itertools
 import operator
@@ -8,7 +9,6 @@ import random
 import time
 import types
 from collections.abc import AsyncIterable, AsyncIterator, Callable, Iterable, Iterator, Sequence
-from functools import partial, singledispatchmethod
 from typing import Self
 
 
@@ -34,15 +34,13 @@ def first(predicate: Callable, iterable: Iterable, *default):
     return next(filter(predicate, iterable), *default)
 
 
-class reiter(partial):
+class reiter(functools.partial):
     """A partial iterator which is re-iterable."""
 
-    __iter__ = partial.__call__
+    __iter__ = functools.partial.__call__
 
 
-class partialmethod(partial):
-    """Variant of functools.partialmethod."""
-
+class partial(functools.partial):  # <3.14
     def __get__(self, instance, owner):
         return self if instance is None else types.MethodType(self, instance)
 
@@ -143,11 +141,11 @@ class waiter:
 
     def __le__(self, ceiling) -> Self:
         """Limit maximum delay generated."""
-        return self.map(partial(min, ceiling))
+        return self.map(functools.partial(min, ceiling))
 
     def __ge__(self, floor) -> Self:
         """Limit minimum delay generated."""
-        return self.map(partial(max, floor))
+        return self.map(functools.partial(max, floor))
 
     def __add__(self, step) -> Self:
         """Generate incremental backoff."""
@@ -161,7 +159,7 @@ class waiter:
         """Add random jitter within given range."""
         return self.map(lambda delay: delay + random.uniform(start, stop))
 
-    @singledispatchmethod
+    @functools.singledispatchmethod
     def throttle(self, iterable: Iterable):
         """Delay iteration."""
         return map(operator.itemgetter(1), zip(self, iterable))
@@ -242,15 +240,15 @@ class waiter:
 
     def repeating(self, func: Callable):
         """A decorator for `repeat`."""
-        return partialmethod(self.repeat, func)
+        return partial(self.repeat, func)
 
     def retrying(self, exception: Exception):
         """Return a decorator for `retry`."""
-        return partial(partialmethod, self.retry, exception)
+        return functools.partial(partial, self.retry, exception)
 
     def polling(self, predicate: Callable):
         """Return a decorator for `poll`."""
-        return partial(partialmethod, self.poll, predicate)
+        return functools.partial(partial, self.poll, predicate)
 
 
 wait = waiter

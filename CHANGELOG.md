@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ## Unreleased
 ### Changed
 * Python >=3.11 required
+* Monotonic timing
 
 ## [1.5.1](https://pypi.org/project/waiter/1.5.1/) - 2025-11-02
 ### Changed

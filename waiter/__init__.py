@@ -20,12 +20,12 @@ def fibonacci(x, y):
 
 
 @contextlib.contextmanager
-def suppress(*exceptions: Exception):
+def suppress(*exceptions: type[Exception]):
     """Variant of `contextlib.suppress`, which also records exception."""
     excs: list = []
     try:
         yield excs
-    except exceptions as exc:  # type: ignore
+    except exceptions as exc:
         excs.append(exc)
 
 
@@ -83,25 +83,25 @@ class waiter:
 
     def __iter__(self):
         """Generate a slow loop of elapsed time."""
-        start = time.time()
+        start = time.monotonic()
         yield self.stats.add(0, 0.0)
         for attempt, delay in enumerate(self.delays, 1):
-            remaining = start + self.timeout - time.time()
+            remaining = start + self.timeout - time.monotonic()
             if remaining < 0:
                 break
             time.sleep(min(delay, remaining))
-            yield self.stats.add(attempt, time.time() - start)
+            yield self.stats.add(attempt, time.monotonic() - start)
 
     async def __aiter__(self):
         """Asynchronously generate a slow loop of elapsed time."""
-        start = time.time()
+        start = time.monotonic()
         yield self.stats.add(0, 0.0)
         for attempt, delay in enumerate(self.delays, 1):
-            remaining = start + self.timeout - time.time()
+            remaining = start + self.timeout - time.monotonic()
             if remaining < 0:
                 break
             await asyncio.sleep(min(delay, remaining))
-            yield self.stats.add(attempt, time.time() - start)
+            yield self.stats.add(attempt, time.monotonic() - start)
 
     def clone(self, func: Callable, *args) -> Self:
         return type(self)(reiter(func, *args), self.timeout)
@@ -161,7 +161,10 @@ class waiter:
 
     @functools.singledispatchmethod
     def throttle(self, iterable: Iterable):
-        """Delay iteration."""
+        """Delay iteration.
+
+        Async version delays the pull is requested.
+        """
         return map(operator.itemgetter(1), zip(self, iterable))
 
     @throttle.register
@@ -211,20 +214,24 @@ class waiter:
         async for _ in self:
             yield await func(*args, **kwargs)
 
-    def retry(self, exception: Exception, func: Callable, *args, **kwargs):
+    def retry(self, exception: type[Exception], func: Callable, *args, **kwargs):
         """Repeat function call until exception isn't raised."""
         if inspect.iscoroutinefunction(func):
             return self.aretry(exception, func, *args, **kwargs)
+        exc = TimeoutError
         for _ in self:
             with suppress(exception) as excs:
                 return func(*args, **kwargs)
-        raise excs[0]  # type: ignore
+            (exc,) = excs
+        raise exc
 
-    async def aretry(self, exception: Exception, func: Callable, *args, **kwargs):
+    async def aretry(self, exception: type[Exception], func: Callable, *args, **kwargs):
+        exc = TimeoutError
         async for _ in self:
             with suppress(exception) as excs:
                 return await func(*args, **kwargs)
-        raise excs[0]  # type: ignore
+            (exc,) = excs
+        raise exc
 
     def poll(self, predicate: Callable, func: Callable, *args, **kwargs):
         """Repeat function call until predicate evaluates to true."""
@@ -234,7 +241,7 @@ class waiter:
 
     async def apoll(self, predicate: Callable, func: Callable, *args, **kwargs):
         async for result in self.repeat(func, *args, **kwargs):
-            if predicate(result):  # pragma: no branch
+            if predicate(result):
                 return result
         raise StopAsyncIteration
 
@@ -242,7 +249,7 @@ class waiter:
         """A decorator for `repeat`."""
         return partial(self.repeat, func)
 
-    def retrying(self, exception: Exception):
+    def retrying(self, exception: type[Exception]):
         """Return a decorator for `retry`."""
         return functools.partial(partial, self.retry, exception)
 

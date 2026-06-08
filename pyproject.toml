@@ -5,7 +5,7 @@ description = "Delayed iteration for polling and retries."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
-authors = [{name = "Aric Coady", email = "aric.coady@gmail.com"}]
+authors = [{name = "A. Coady"}]
 keywords = ["wait", "retry", "poll", "delay", "sleep", "timeout", "incremental", "exponential", "backoff", "async"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -39,4 +39,4 @@ branch = true
 
 [dependency-groups]
 dev = ["pytest-cov"]
-docs = ["mkdocstrings[python]", "mkdocs-jupyter", "httpx"]
+docs = ["mkdocstrings[python]", "mkdocs-jupyter", "httpx2"]

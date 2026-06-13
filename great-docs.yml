@@ -1,0 +1,12 @@
+user_guide: docs
+parser: google
+inline_methods: true
+
+authors:
+- name: A. Coady
+  github: coady
+
+reference:
+- title: Classes
+  contents:
+  - waiter

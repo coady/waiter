@@ -1,0 +1,95 @@
+---
+title: "Examples"
+---
+
+HTTP requests as an example of an unreliable operation.
+
+## decorators
+Using decorators to retry functions is a popular choice, and `waiter` supports this pattern.
+
+```{python}
+import httpx2 as httpx
+
+from waiter import wait
+
+backoff = wait(0.1) * 2
+url = "https://httpbin.org/status/200"
+
+
+@backoff.retrying(OSError)
+def get_url(url):
+    return httpx.get(url)
+
+
+get_url(url)
+```
+
+## functions
+But there's a problem with this approach: the *implementer* of the unreliable function is choosing the retry strategy instead of the *caller*. Which in practice means the decorated function is often just a wrapper around the underlying implementation.
+
+The above example could just as easily be a partially bound function, and that is in fact how the `waiter` decorators are implemented. This approach also facilitates reusing clients, which should be done for repeated requests anyway.
+
+```{python}
+from functools import partial
+
+get_url = partial(backoff.retry, OSError, httpx.Client().get)
+get_url(url)
+```
+
+Which in turn raises the question of whether `get_url` is worth abstracting at all. The completely in-lined variation is arguably just as readable.
+
+```{python}
+backoff.retry(OSError, httpx.Client().get, url)
+```
+
+```{python}
+backoff.poll(lambda r: not r.is_error, httpx.Client().get, url)
+```
+
+## iteration
+But even the functional approach breaks down if the unreliable code is more naturally expressed as a block, or there are multiple failure conditions, or logging is required, etc. It's not worth creating what amounts to a domain-specific language just to avoid a for-loop.
+
+```{python}
+import logging
+
+
+def get_url(url):
+    """Retry and log both connection and http errors."""
+    with httpx.Client() as client:
+        for _ in backoff[:1]:
+            try:
+                resp = client.get(url)
+            except OSError:
+                logging.exception(url)
+                continue
+            if not resp.is_error:
+                return resp
+            logging.error(f"{url} {resp.status_code}")
+    return None
+
+
+get_url("https://httpbin.org/status/404")
+```
+
+## asyncio
+`waiter` also supports async iteration and coroutine functions.
+
+```{python}
+async def get_url(url):
+    return await backoff.retry(OSError, httpx.AsyncClient().get, url)
+
+
+await get_url(url)
+```
+
+```{python}
+async def get_url(url):
+    async with httpx.AsyncClient() as client:
+        async for _ in backoff:
+            resp = await client.get(url)
+            if not resp.is_error:
+                return resp
+
+
+await get_url(url)
+```

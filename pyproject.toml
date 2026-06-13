@@ -39,4 +39,4 @@ branch = true
 
 [dependency-groups]
 dev = ["pytest-cov"]
-docs = ["mkdocstrings[python]", "mkdocs-jupyter", "httpx2"]
+docs = ["great-docs", "httpx2"]

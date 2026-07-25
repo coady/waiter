@@ -30,9 +30,6 @@ Issues = "https://github.com/coady/waiter/issues"
 [tool.ruff]
 line-length = 100
 
-[tool.ruff.lint]
-extend-select = ["I"]
-
 [tool.coverage.run]
 source = ["waiter"]
 branch = true

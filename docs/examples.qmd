@@ -66,9 +66,6 @@ def get_url(url):
                 return resp
             logging.error(f"{url} {resp.status_code}")
     return None
-
-
-get_url("https://httpbin.org/status/404")
 ```
 
 ## asyncio

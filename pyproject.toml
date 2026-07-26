@@ -1,6 +1,6 @@
 [project]
 name = "waiter"
-version = "1.5.1"
+version = "1.6"
 description = "Delayed iteration for polling and retries."
 readme = "README.md"
 requires-python = ">=3.11"
